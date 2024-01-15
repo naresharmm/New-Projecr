@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile</title>
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="profile.js"></script>
+</head>
+<body>
+    <header>
+        <i class="fas fa-user"></i>
+        <p style="font-family:'Times New Roman', Times, serif;font-size:30px;">Welcome to your profile!</p>
+    </header>
+
+    <div class="button-container">
+        <button class="add-button" onclick="openForm()">Add</button>
+        <button class="list-button" onclick="alert('Button 2 clicked')"><i class="fas fa-list"></i> Add List</button>
+        <button class="list-button" onclick="alert('Button 3 clicked')"><i class="fas fa-th-list"></i> My List</button>
+    </div>
+
+    <main>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeForm()">&times;</span>
+                <h2>Write something in the cloud:</h2>
+                <form>
+                    <textarea rows="4" placeholder="Enter your text..."></textarea>
+                    <br>
+                    <button type="button" onclick="submitForm()">Send</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Contact: your.email@example.com</p>
+    </footer>
+</body>
+</html>
