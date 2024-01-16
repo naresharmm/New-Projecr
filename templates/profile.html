@@ -4,9 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile</title>
-    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="/static/profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="profile.js"></script>
+    <!-- <script src="/templates/profile.js"></script> -->
+    <script>
+        function openForm() {
+    document.getElementById('myModal').style.display = 'flex';
+}
+
+function closeForm() {
+    document.getElementById('myModal').style.display = 'none';
+}
+
+function submitForm() {
+    alert('Form submitted!');
+    console.log("Form submitted")
+    closeForm();
+}
+    </script>
 </head>
 <body>
     <header>

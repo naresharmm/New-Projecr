@@ -3,9 +3,26 @@
 <html lang="en">
 <head>
     <title>Main Page</title>
-    <link rel="stylesheet" href="home_style.css">
-    <script src="home.js"></script>
-    
+    <link rel="stylesheet" href="/static/home_style.css">
+    <!-- <script src="/templates/home.js"></script> -->
+    <script>
+        function toggleForm(formId) {
+    document.getElementById('registrationForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'none';
+
+    document.getElementById(formId).style.display = 'block';
+}
+
+function handleClick(action) {
+    console.log('Clicked:', action);
+
+    if (action === 'register') {
+        window.location.href = 'profile.html';
+    } else if (action === 'login') {
+        window.location.href = 'profile.html';
+    }
+}
+    </script>
 </head>
 <body>
 
@@ -101,5 +118,6 @@
             <button onclick="handleClick('login')" id="loginBut" class="button2">Login</button>
         </form>
     </div>
+    
 </body>
 </html>
