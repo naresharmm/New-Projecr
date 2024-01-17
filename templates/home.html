@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Main Page</title>
-    <link rel="stylesheet" href="/static/home_style.css">
-    <script src="/static/home.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home_style.css') }}">
+    <script src="{{ url_for('static', filename='home.js') }}"></script>
 </head>
 <body>
     <div class="container">
@@ -32,14 +31,12 @@
             required class="phonenumber"><br><br>
 
             <label for="country">Country:</label>
-            <form>
-                
-                <select name="country" id="country" class="country">
-                    {% for country in countries %}
-                        <option value="{{ country }}">{{ country }}</option>
-                    {% endfor %}
-                </select>
-            </form>
+            <select name="country" id="country" class="country">
+                {% for country in countries %}
+                    <option value="{{ country }}">{{ country }}</option>
+                {% endfor %}
+            </select><br><br>
+
             <label for="password">Password:</label>
             <input type="password" id="password" name="password"
              required><br><br>

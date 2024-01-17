@@ -4,30 +4,24 @@ function toggleForm(formId) {
     document.getElementById(formId).style.display = 'block';
 }
 
-document.querySelector('form').addEventListener('submit', function (event) {
+document.getElementById('registrationForm').addEventListener('submit', function (event) {
     event.preventDefault();
 
-    let action = 'register'; 
-    let actionSec = 'login'
-
-    if (action === 'register' || actionSec === 'login') {
-        fetch('/register', {
-            method: 'POST',
-            body: new FormData(document.querySelector('form'))
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            if (response.redirected) {
-                console.log("Redirecting to home page");
-                window.location.href = '/profile';
-                return; 
-            }
-        })
-        .catch(error => {
-            console.error('Error during fetch:', error);
-          
-        });
-    }
+    fetch('/register', {
+        method: 'POST',
+        body: new FormData(document.getElementById('registrationForm'))
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        if (response.redirected) {
+            console.log("Redirecting to profile page");
+            window.location.href = '/profile';
+            return; 
+        }
+    })
+    .catch(error => {
+        console.error('Error during fetch:', error);
+    });
 });
