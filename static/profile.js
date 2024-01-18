@@ -1,27 +1,26 @@
-function openForm() {
-    document.getElementById('myModal').style.display = 'flex';
-}
+class FormHandler {
+  constructor(formId, submitCallback) {
+    this.formId = formId;
+    this.submitCallback = submitCallback;
+  }
 
-function closeForm() {
-    document.getElementById('myModal').style.display = 'none';
-}
+  openForm() {
+    document.getElementById(this.formId).style.display = 'flex';
+  }
 
-function submitForm() {
+  closeForm() {
+    document.getElementById(this.formId).style.display = 'none';
+  }
+
+  submitForm() {
     alert('Form submitted!');
-    console.log("Form submitted")
-    closeForm();
+    console.log('Form submitted');
+    this.submitCallback();
+    this.closeForm();
+  }
 }
 
-function openFormSec() {
-    document.getElementById('myModal2').style.display = 'flex';
-}
-
-function closeFormSec() {
-    document.getElementById('myModal2').style.display = 'none';
-}
-
-function submitFormSec() {
-    alert('Form submitted!');
-    console.log("Form submitted")
-    closeFormSec();
-}
+let formHandler1 = new FormHandler('myModal', () => 
+alert('First form submitted!'));
+let formHandler2 = new FormHandler('myModal2', () => 
+alert('Second form submitted!'));

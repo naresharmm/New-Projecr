@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile</title>
     <link rel="stylesheet" href="/static/profile.css">
-    <link rel="stylesheet" 
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/
-    all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font
+    -awesome/6.0.0/css/all.min.css">
     <script src="/static/profile.js"></script>
 </head>
 <body>
@@ -18,35 +17,41 @@
     </header>
 
     <div class="button-container">
-        <button class="add-button" onclick="openForm()">Add</button>
+        <button class="add-button" onclick="formHandler1.openForm()">Add</button>
         <button class="list-button" onclick="alert('Button 3 clicked')">
             <i class="fas fa-list"></i> Add List</button>
-        <button class="list-button" onclick= "openFormSec()">
+        <button class="list-button" onclick="formHandler2.openForm()">
             <i class="fas fa-th-list"></i> My List</button>
     </div>
 
     <main>
         <div id="myModal" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeForm()">&times;</span>
+                <span class="close" onclick="formHandler1.closeForm()">
+                    &times;</span>
                 <h2>Write something in the cloud:</h2>
                 <form>
                     <textarea rows="4" placeholder="Enter your text...">
+
                     </textarea>
                     <br>
-                    <button type="button" onclick="submitForm()">Send</button>
+                    <button type="button" onclick="formHandler1.submitForm()">
+                        Send</button>
                 </form>
             </div>
         </div>
         <div id="myModal2" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeFormSec()">&times;</span>
+                <span class="close" onclick="formHandler2.closeForm()">
+                    &times;</span>
                 <h2>View or change </h2>
                 <form>
                     <textarea rows="4" placeholder="Enter your text...">
+
                     </textarea>
                     <br>
-                    <button type="button" onclick="submitFormSec()">Change</button>
+                    <button type="button" onclick="formHandler2.submitForm()">
+                        Change</button>
                 </form>
             </div>
         </div>

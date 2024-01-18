@@ -1,4 +1,7 @@
+''' flask project
+'''
 import re
+
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
@@ -10,7 +13,8 @@ countries = [
     "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
     "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
     "Bulgaria", "Burkina Faso", "Burundi", "Côte d'Ivoire", "Cabo Verde",
-    "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile",
+    "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad",
+      "Chile",
     "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica",
     "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)",
     "Democratic Republic of the Congo", "Denmark",
@@ -18,18 +22,26 @@ countries = [
 
 @app.route('/')
 def home():
+    '''function
+    '''
     return render_template('home.html', countries=countries)
 
 @app.route('/profile')
 def profile():
+    '''function
+    '''
     return render_template('profile.html')
 
 @app.route('/register', methods=['GET'])
 def register_form():
+    '''function
+    '''
     return render_template('register.html', countries=countries)
 
 @app.route('/register', methods=['POST'])
 def register():
+    '''function
+    '''
     username = request.form.get('username')
     phone_number = request.form.get("phone_number")
     password = request.form.get('password')
@@ -49,10 +61,8 @@ def register():
     )
 
     if form_filled and matches and password == password_sec:
-        # Registration successful
         return redirect(url_for('profile'))
     else:
-        # Registration failed
         return render_template('registration_failed.html')
 
 if __name__ == '__main__':
