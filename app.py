@@ -1,9 +1,10 @@
 ''' flask project
 '''
 
-
 from flask import Flask, render_template, request, redirect, url_for
+
 from user import UserValidator
+
 from countries import get_countries
 
 
@@ -15,7 +16,7 @@ def home():
     '''
     function'''
     countries = get_countries()
-    return render_template('home.html', countries=countries)
+    return render_template('home.html', countries = countries)
 
 @app.route('/profile')
 def profile():
@@ -42,7 +43,8 @@ def register():
     )
 
     if user_validator.form_filled() and user_validator.valid_phone() \
-            and user_validator.valid_email() and user_validator.valid_password() \
+            and user_validator.valid_email() and \
+            user_validator.valid_password() \
             and user_validator.passwords_match():
         return redirect(url_for('profile'))
     else:
