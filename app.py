@@ -1,29 +1,20 @@
 ''' flask project
 '''
-import re
+
 
 from flask import Flask, render_template, request, redirect, url_for
+from user import UserValidator
+from countries import get_countries
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
-countries = [
-    "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
-    "Argentina", "Armenia", "Australia", "Austria", "Bahamas", "Bahrain",
-    "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
-    "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
-    "Bulgaria", "Burkina Faso", "Burundi", "Côte d'Ivoire", "Cabo Verde",
-    "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad",
-      "Chile",
-    "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica",
-    "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)",
-    "Democratic Republic of the Congo", "Denmark",
-]
-
 @app.route('/')
 def home():
-    '''function
     '''
+    function'''
+    countries = get_countries()
     return render_template('home.html', countries=countries)
 
 @app.route('/profile')
@@ -36,31 +27,23 @@ def profile():
 def register_form():
     '''function
     '''
-    return render_template('register.html', countries=countries)
-
+    return render_template('register.html', countries = get_countries)
 @app.route('/register', methods=['POST'])
 def register():
     '''function
     '''
-    username = request.form.get('username')
-    phone_number = request.form.get("phone_number")
-    password = request.form.get('password')
-    password_sec = request.form.get('password2')
-    email = request.form.get("email")
-    country = request.form.get("country")
-    form_filled = username and password and email and country
-
-    phone_pattern = r'^\+374\d{8}$'
-    email_pattern = r'^\w+@[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$'
-    password_pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"
-
-    matches = (
-        re.match(phone_pattern, phone_number) and
-        re.match(email_pattern, email) and
-        re.match(password_pattern, password)
+    user_validator = UserValidator(
+        request.form.get('username'),
+        request.form.get("phone_number"),
+        request.form.get('password'),
+        request.form.get('password2'),
+        request.form.get("email"),
+        request.form.get("country")
     )
 
-    if form_filled and matches and password == password_sec:
+    if user_validator.form_filled() and user_validator.valid_phone() \
+            and user_validator.valid_email() and user_validator.valid_password() \
+            and user_validator.passwords_match():
         return redirect(url_for('profile'))
     else:
         return render_template('registration_failed.html')
