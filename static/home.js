@@ -31,8 +31,10 @@ document.getElementById('loginFormId').addEventListener('submit',
     function (event) {
     event.preventDefault();
 
-    let username = document.getElementById('username2');
-    let password = document.getElementById('password2');
+    let username = document.getElementById('username').value.trim();
+    let password = document.getElementById('password').value.trim();
+    // let username = document.getElementById('username');
+    // let password = document.getElementById('password');
 
     if (username === '' || password === '') {
         alert('Username and password are required.');
