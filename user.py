@@ -1,5 +1,6 @@
 '''user.py
 '''
+
 import re
 
 class UserValidator:

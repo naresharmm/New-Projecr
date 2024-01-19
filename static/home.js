@@ -4,7 +4,8 @@ function toggleForm(formId) {
     document.getElementById(formId).style.display = 'block';
 }
 
-document.getElementById('registrationForm').addEventListener('submit', function (event) {
+document.getElementById('registrationForm').addEventListener('submit',
+ function (event) {
     event.preventDefault();
 
     fetch('/register', {
