@@ -4,8 +4,8 @@ function toggleForm(formId) {
     document.getElementById(formId).style.display = 'block';
 }
 
-document.getElementById('registrationForm').addEventListener('submit',
- function (event) {
+document.getElementById('registrationForm').addEventListener('submit', 
+    function (event) {
     event.preventDefault();
 
     fetch('/register', {
@@ -25,4 +25,19 @@ document.getElementById('registrationForm').addEventListener('submit',
     .catch(error => {
         console.error('Error during fetch:', error);
     });
+});
+
+document.getElementById('loginFormId').addEventListener('submit', 
+    function (event) {
+    event.preventDefault();
+
+    let username = document.getElementById('username2');
+    let password = document.getElementById('password2');
+
+    if (username === '' || password === '') {
+        alert('Username and password are required.');
+        return;
+    }
+
+    window.location.href = '/profile';
 });

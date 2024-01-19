@@ -29,6 +29,13 @@ def register_form():
     '''function
     '''
     return render_template('register.html', countries = get_countries)
+
+@app.route('/registrationfailed')
+def registration_failed():
+    '''function
+    '''
+    return render_template('registration_failed.html')
+
 @app.route('/register', methods=['POST'])
 def register():
     '''function

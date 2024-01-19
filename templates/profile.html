@@ -17,7 +17,8 @@
     </header>
 
     <div class="button-container">
-        <button class="add-button" onclick="formHandler1.openForm()">Add</button>
+        <button class="add-button" onclick="formHandler1.openForm()">Add
+        </button>
         <button class="list-button" onclick="alert('Button 3 clicked')">
             <i class="fas fa-list"></i> Add List</button>
         <button class="list-button" onclick="formHandler2.openForm()">
@@ -32,7 +33,6 @@
                 <h2>Write something in the cloud:</h2>
                 <form>
                     <textarea rows="4" placeholder="Enter your text...">
-
                     </textarea>
                     <br>
                     <button type="button" onclick="formHandler1.submitForm()">
@@ -44,10 +44,16 @@
             <div class="modal-content">
                 <span class="close" onclick="formHandler2.closeForm()">
                     &times;</span>
-                <h2>View or change </h2>
+                    <label class="mylist">Edit
+                        <input type="radio" checked="checked" name="radio">
+                        <span class="checkmark"></span>
+                      </label>
+                      <label class="mylist">Delete
+                        <input type="radio" name="radio">
+                        <span class="checkmark"></span>
+                      </label>
                 <form>
                     <textarea rows="4" placeholder="Enter your text...">
-
                     </textarea>
                     <br>
                     <button type="button" onclick="formHandler2.submitForm()">
