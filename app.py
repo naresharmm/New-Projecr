@@ -14,31 +14,34 @@ app.secret_key = 'your_secret_key_here'
 @app.route('/')
 def home():
     '''
-    function'''
+    Renders the home page with a list of countries.
+    '''
     countries = get_countries()
     return render_template('home.html', countries = countries)
 
 @app.route('/profile')
 def profile():
-    '''function
+    '''Returns a rendered HTML displaying profile page
     '''
     return render_template('profile.html')
 
 @app.route('/register', methods=['GET'])
 def register_form():
-    '''function
+    '''
+    Returns a rendered HTML template displaying the registration form.
     '''
     return render_template('register.html', countries = get_countries)
 
 @app.route('/registrationfailed')
 def registration_failed():
-    '''function
+    '''Renders the page of registration failure.
     '''
     return render_template('registration_failed.html')
 
 @app.route('/register', methods=['POST'])
 def register():
-    '''function
+    '''
+    Handles user registration based on form input
     '''
     user_validator = UserValidator(
         request.form.get('username'),
