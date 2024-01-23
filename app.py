@@ -1,7 +1,7 @@
 ''' Flask project
 '''
-
-from flask import Flask, render_template, request, redirect, url_for
+import json
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 
 from user import UserValidator
 
@@ -21,7 +21,8 @@ def home():
 
 @app.route('/profile')
 def profile():
-    '''Returns a rendered HTML displaying profile page
+    '''
+    Returns a rendered HTML displaying profile page
     '''
     return render_template('profile.html')
 
@@ -32,9 +33,11 @@ def register_form():
     '''
     return render_template('register.html', countries = get_countries)
 
-@app.route('/registrationfailed')
+@app.route('/registration-failed')
 def registration_failed():
-    '''Renders the page of registration failure.
+    ''' 
+    Renders the page of registration failure.
+    
     '''
     return render_template('registration_failed.html')
 
@@ -60,6 +63,28 @@ def register():
     else:
         return render_template('registration_failed.html')
 
+@app.route('/save_text', methods=['POST'])
 
+def save_text():
+    '''
+    Saving the text
+    '''
+    try:
+        text = request.json.get('text')
+
+        if text:
+            with open('form.json', 'r', encoding='utf-8') as file:
+                data = json.load(file)
+            data.append(text)
+
+            with open('form.json', 'w', encoding='utf-8') as file:
+                json.dump(data, file, ensure_ascii=False, indent=2)
+
+            return jsonify({'message': 'Text saved successfully.'}), 200
+
+        return jsonify({'message': 'Text not provided.'}), 400
+    except Exception as e:
+        print(f'Error saving text: {e}')
+        return jsonify({'message': ' error occurred while saving the text.'}), 500
 if __name__ == '__main__':
     app.run(debug=False, host='127.0.0.1', port=8080)
