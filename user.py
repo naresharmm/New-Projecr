@@ -4,7 +4,7 @@
 import re
 
 class UserValidator:
-    '''checks validation
+    '''Class UserValidator checks validation of inputs
     '''
     def __init__(self, username, phone_number, password,
                  password_sec, email,country):
@@ -16,27 +16,27 @@ class UserValidator:
         self.country = country
 
     def form_filled(self):
-        '''function
+        '''Checks if forms are filled
         '''
         return all([self.username, self.password, self.email, self.country])
 
     def valid_phone(self):
-        '''function
+        ''' Checks phone validation
         '''
         return bool(re.match(r'^\+374\d{8}$', self.phone_number))
 
     def valid_email(self):
-        '''function
+        '''Checks validation
         '''
         return bool(re.match(r'^\w+@[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$', self.email))
 
     def valid_password(self):
-        '''function
+        ''' Checks validation password
         '''
         return bool(re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$",
                              self.password))
 
     def passwords_match(self):
-        '''function
+        '''Checks if 2 passwords match 
         '''
         return self.password == self.password_sec
