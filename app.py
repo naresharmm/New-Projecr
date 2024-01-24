@@ -46,19 +46,7 @@ def register():
     '''
     Handles user registration based on form input
     '''
-    user_validator = UserValidator(
-        request.form.get('username'),
-        request.form.get("phone_number"),
-        request.form.get('password'),
-        request.form.get('password2'),
-        request.form.get("email"),
-        request.form.get("country")
-    )
-
-    if user_validator.form_filled() and user_validator.valid_phone() \
-            and user_validator.valid_email() and \
-            user_validator.valid_password() \
-            and user_validator.passwords_match():
+    if UserValidator.validate_registration(request.form):
         return redirect(url_for('profile'))
     else:
         return render_template('registration_failed.html')
@@ -86,5 +74,14 @@ def save_text():
     except Exception as e:
         print(f'Error saving text: {e}')
         return jsonify({'message': ' error occurred while saving the text.'}), 500
+@app.route('/get_saved_texts')
+def get_saved_texts():
+    try:
+        with open('form.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        return jsonify({'texts': data}), 200
+    except Exception as e:
+        print(f'Error fetching saved texts: {e}')
+        return jsonify({'message': 'Error occurred while fetching saved texts.'}), 500
 if __name__ == '__main__':
     app.run(debug=False, host='127.0.0.1', port=8080)

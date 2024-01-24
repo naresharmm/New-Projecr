@@ -45,22 +45,27 @@ class FormHandler {
     })
     .catch(error => alert('An error occurred. Please try again.'));
   }
-
+  
   fetchAndDisplaySavedTexts() {
     fetch('/get_saved_texts')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
       .then(data => {
         const myListForm = document.getElementById('myModal2');
         const textContainer = myListForm.querySelector('.modal-content textarea');
-        
-    
-        textContainer.value = '';
 
-        data.texts.forEach(text => {
-          textContainer.value += text + '\n';
-        });
+        textContainer.value = data.texts.join('\n'); // Display saved texts in textarea
       })
       .catch(error => alert('An error occurred while fetching saved texts.'));
+  }
+
+  openList() {
+    this.fetchAndDisplaySavedTexts();
+    document.getElementById(this.formId).style.display = 'flex';
   }
 }
 

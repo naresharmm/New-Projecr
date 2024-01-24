@@ -1,48 +1,40 @@
-'''user.py
-'''
+# user.py
 
 import re
 
 class UserValidator:
-    '''
-    Class UserValidator checks validation of inputs
-    '''
-    def __init__(self, username, phone_number, password,
-                 password_sec, email,country):
-        self.username = username
-        self.phone_number = phone_number
-        self.password = password
-        self.password_sec = password_sec
-        self.email = email
-        self.country = country
+  
+    def validate_registration(request_form):
+        '''
+        Validates user registration based on form input
+        '''
+        username = request_form.get('username')
+        phone_number = request_form.get("phone_number")
+        password = request_form.get('password')
+        password2 = request_form.get('password2')
+        email = request_form.get('email')
+        country = request_form.get('country')
 
-    def form_filled(self):
-        '''
-        Checks if forms are filled
-        '''
-        return all([self.username, self.password, self.email, self.country])
+        return all([username, password, email, country]) and \
+               UserValidator.is_valid_phone(phone_number) and \
+               UserValidator.is_valid_email(email) and \
+               UserValidator.is_valid_password(password, password2)
 
-    def valid_phone(self):
-        ''' Checks phone validation
-        '''
-        return bool(re.match(r'^\+374\d{8}$', self.phone_number))
 
-    def valid_email(self):
-        '''
-        Checks validation
-        '''
-        return bool(re.match(r'^\w+@[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$', self.email))
+    def is_valid_phone(phone_number):
+        ''' Checks phone validation '''
+        return bool(re.match(r'^\+374\d{8}$', phone_number))
 
-    def valid_password(self):
-        ''' 
-        Checks validation password
-        '''
-        return bool(re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$",
-                             self.password))
+  
+    def is_valid_email(email):
+        ''' Checks email validation '''
+        return bool(re.match(r'^\w+@[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$', email))
 
-    def passwords_match(self):
-        '''
-        Checks if 2 passwords match 
-        '''
-        return self.password == self.password_sec
 
+    def is_valid_password(password, password2):
+        ''' Checks password validation '''
+        return UserValidator.has_valid_format(password) and password == password2
+
+    def has_valid_format(password):
+        ''' Checks password format '''
+        return bool(re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$", password))
