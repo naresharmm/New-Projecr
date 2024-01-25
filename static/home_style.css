@@ -5,7 +5,10 @@ body {
     padding: 0;
     text-align: center;
 }
-
+.registerBut{
+    width:100px;
+    height:500px;
+}
 .container {
     width: 80%;
     height: 80%;
@@ -99,7 +102,7 @@ h1 {
 .container a[type="button"],
 .container button[type="button"] {
     display: inline-block;
-    padding: 18px 28px;
+    padding: 38px 50px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
