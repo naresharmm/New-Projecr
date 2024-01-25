@@ -58,7 +58,7 @@ class FormHandler {
         const myListForm = document.getElementById('myModal2');
         const textContainer = myListForm.querySelector('.modal-content textarea');
 
-        textContainer.value = data.texts.join('\n'); // Display saved texts in textarea
+        textContainer.value = data.texts.join('\n'); 
       })
       .catch(error => alert('An error occurred while fetching saved texts.'));
   }
@@ -67,6 +67,62 @@ class FormHandler {
     this.fetchAndDisplaySavedTexts();
     document.getElementById(this.formId).style.display = 'flex';
   }
+}
+
+function editHandler() {
+  const textareaValue = document.querySelector('#myModal2 .modal-content textarea').value.trim();
+
+  if (!textareaValue) {
+    alert('Please enter some text before editing.');
+    return;
+  }
+
+  fetch('/edit_text', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({ text: textareaValue }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    alert(data.message || 'Text edited successfully.');
+    formHandler2.closeForm();
+  })
+  .catch(error => alert('An error occurred while editing the text.'));
+}
+
+function deleteHandler() {
+  const confirmation = confirm('Are you sure you want to delete this text?');
+
+  if (!confirmation) {
+    return;
+  }
+
+  fetch('/delete_text', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    alert(data.message || 'Text deleted successfully.');
+    formHandler2.closeForm();
+  })
+  .catch(error => alert('An error occurred while deleting the text.'));
 }
 
 let formHandler1 = new FormHandler('myModal', () =>

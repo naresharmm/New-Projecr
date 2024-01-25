@@ -10,6 +10,7 @@
 </head>
 <body>
     <header>
+        <h1>change</h1>
         <i class="fas fa-user"></i>
         <p style="font-family:'Times New Roman', Times, serif;font-size:30px;">
             Welcome to your profile!</p>
@@ -17,11 +18,10 @@
 
     <div class="button-container">
         <button class="add-button" onclick="formHandler1.openForm()">Add</button>
-        <button class="list-button" onclick="formHandler2.openList()"> <!-- Updated this line -->
+        <button class="list-button" onclick="formHandler2.openList()"> 
             <i class="fas fa-th-list"></i> My List
         </button>
     </div>
-
     <main>
         <div id="myModal" class="modal">
             <div class="modal-content">
@@ -37,23 +37,17 @@
         <div id="myModal2" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="formHandler2.closeForm()">&times;</span>
-                <label class="mylist">Edit
-                    <input type="radio" checked="checked" name="radio">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="mylist">Delete
-                    <input type="radio" name="radio">
-                    <span class="checkmark"></span>
-                </label>
+                <h2>Edit or Delete:</h2>
+                <button type="button" onclick="editHandler()">Edit</button>
+                <button type="button" onclick="deleteHandler()">Delete</button>
                 <form>
                     <textarea rows="4" placeholder="Enter your text..."></textarea>
                     <br>
-                    <button type="button" onclick="formHandler2.submitForm()">Change</button>
+                    <button type="button" onclick="formHandler2.submitForm()">Save changes</button>
                 </form>
             </div>
         </div>
     </main>
-
     <footer>
         <p>Contact: your.email@example.com</p>
     </footer>
