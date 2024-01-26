@@ -13,6 +13,7 @@ header {
     padding: 20px;
     animation: fadeIn 1s ease-in-out, headerBgChange 5s infinite alternate;
 }
+
 .mylist {
     display: block;
     position: relative;
@@ -25,7 +26,6 @@ header {
     -ms-user-select: none;
     user-select: none;
 }
-
 
 .mylist input {
     position: absolute;
@@ -43,16 +43,13 @@ header {
     border-radius: 50%;
 }
 
-
 .mylist:hover input ~ .checkmark {
     background-color: #ccc;
 }
 
-
 .mylist input:checked ~ .checkmark {
     background-color: #2196F3;
 }
-
 
 .mylist .checkmark:after {
     content: "";
@@ -60,59 +57,14 @@ header {
     display: none;
 }
 
-
 .mylist input:checked ~ .checkmark:after {
     display: block;
-}
-
-
-.mylist .checkmark:after {
     top: 9px;
     left: 9px;
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: white;
-}
-
-@keyframes headerBgChange {
-    from {
-        background-color: #3498db;
-    }
-    to {
-        background-color: #2ecc71;
-    }
-}
-
-
-header i {
-    font-size: 48px;
-    margin-bottom: 10px;
-}
-
-h1 {
-    margin: 10px 0;
-}
-
-p {
-    margin-bottom: 20px;
-}
-
-.button-container {
-    text-align: center;
-    padding: 20px;
-    animation: slideInUp 1s ease-in-out;
-}
-
-button {
-    background-color: #3498db;
-    color: white;
-    padding: 10px 20px;
-    margin: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
 }
 
 button {
@@ -139,14 +91,29 @@ button:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
+    animation: fadeIn 0.5s ease;
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 50%;
+    background: rgba(247, 247, 247, 0.9) url('path-to-subtle-texture.png');
+    color: #333;
+    font-family: 'Helvetica Neue', sans-serif;
+    margin: 5% auto;
+    padding: 2rem;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    max-width: 60vw;
+    max-height: 50vh;
+    width: auto;
+    height: auto;
+    overflow-y: auto;
+    animation: fadeIn 0.5s ease;
+    transition: transform 0.2s ease;
+}
+
+.modal-content:hover {
+    transform: scale(1.02);
 }
 
 .close {
@@ -159,16 +126,6 @@ button:hover {
 
 .close:hover {
     color: black;
-}
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    animation: fadeIn 0.5s ease;
 }
 
 
@@ -190,15 +147,16 @@ footer {
     animation: slideInUpFooter 1s ease-in-out;
 }
 
-@keyframes slideInUpFooter {
-    from {
-        transform: translateY(50px);
-    }
-    to {
-        transform: translateY(0);
-    }
+.text-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
 }
 
+.text-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
 
 @keyframes fadeIn {
     from {
@@ -206,6 +164,15 @@ footer {
     }
     to {
         opacity: 1;
+    }
+}
+
+@keyframes headerBgChange {
+    from {
+        background-color: #3498db;
+    }
+    to {
+        background-color: #2ecc71;
     }
 }
 
@@ -217,14 +184,13 @@ footer {
         transform: translateY(0);
     }
 }
-.text-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-}
 
-.text-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+@keyframes slideInUpFooter {
+    from {
+        transform: translateY(50px);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
 

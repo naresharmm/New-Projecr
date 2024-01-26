@@ -130,7 +130,7 @@ function deleteNodes(title) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title: title }), // Pass the title for deletion
+        body: JSON.stringify({ title: title }), 
     })
     .then(response => {
         if (!response.ok) {
@@ -143,7 +143,7 @@ function deleteNodes(title) {
          
     })
     .catch(error => {
-        console.error(error); // Log the full error object
+        console.error(error); 
         alert('An error occurred while deleting the text: ' + error.message);
     });
 }

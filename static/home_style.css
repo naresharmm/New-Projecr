@@ -6,28 +6,42 @@ body {
     text-align: center;
 }
 
-.registerBut,.loginBut {
-    width: 110px;
-    height: 50px;
-    background-color: #0b151f;
-    color: white;
+h1 {
+    color: #333;
+}
+
+.regBtn, .button1, .button2, .container a[type="button"], .container button[type="button"] {
     border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
     font-size: 18px;
     text-decoration: none;
+    color: white;
     padding: 10px 20px;
 }
 
-.registerBut:hover {
+.regBtn, .button1 {
+    background-color: rgb(74, 5, 74);
+}
+
+
+.regBtn:hover {
     background-color: #0056b3;
 }
 
-.loginBut {
-    width: 100px;
-    height: 100px;
-    background-color: aqua;
+.button1:hover {
+    background-color: #b9df9e;
+    color: black;
+}
+
+.button2, .container a[type="button"], .container button[type="button"] {
+    background-color: #333;
+}
+
+.button2:hover, .container a[type="button"]:hover, .container button[type="button"]:hover {
+    background-color: #555;
+    color: white;
 }
 
 .container {
@@ -38,53 +52,6 @@ body {
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    color: #333;
-}
-
-.button_container {
-    margin-top: 20px;
-}
-
-.button1,
-.button2 {
-    display: inline-block;
-    padding: 18px 28px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    font-size: 18px;
-    text-decoration: none;
-    color: white;
-    width: 10%;
-    height: 20px;
-    background-color: rebeccapurple;
-}
-
-.button1 {
-    background-color: rgb(74, 5, 74);
-}
-
-.button2 {
-    background-color: #333;
-}
-
-.button1:hover {
-    background-color: #b9df9e;
-    color: black;
-}
-
-.button2:hover {
-    background-color: #555;
-    color: white;
-}
-
-#registrationForm,
-#loginForm {
-    display: none;
 }
 
 .container form {
@@ -98,46 +65,57 @@ h1 {
     font-weight: bold;
 }
 
-.container input[type="text"],
-.container input[type="password"] {
+.container input[type="text"], .container input[type="password"], .container select {
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 6px;
     border: 1px solid #ccc;
-    width: 300px;
     font-size: 16px;
+    background-color: #f5f5f5;
+}
+
+.container input[type="text"], .container input[type="password"] {
+    width: 300px;
 }
 
 .container select {
     width: 220px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
     color: #555;
-    background-color: #f5f5f5;
     appearance: none;
     -webkit-appearance: none;
-    margin-bottom: 20px;
 }
 
-.container a[type="button"],
-.container button[type="button"] {
+#registrationForm, #loginForm {
+    display: none;
+}
+
+.button_container {
+    margin-top: 20px;
+}
+
+.button1, .button2 {
     display: inline-block;
-    padding: 38px 50px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    font-size: 18px;
-    text-decoration: none;
+    width: 10%;
+    height: 20px;
+    background-color: rebeccapurple;
+}
+#loginBut {
+    background-color: rebeccapurple; 
     color: white;
+    padding: 12px 24px;
+    font-size: 16px; 
+    border-radius: 4px;
+    text-align: center;
+    display: inline-block; 
+    width: auto; 
+    height: auto; 
+    line-height: normal; 
+    box-shadow: none; 
+    transition: background-color 0.3s ease-in-out;
+    border:none;
+    cursor:pointer;
 }
 
-.container a[type="button"]:hover,
-.container button[type="button"]:hover {
-    background-color: #b9df9e;
-    color: black;
+#loginBut:hover {
+    background-color: #937896; 
 }
-
-

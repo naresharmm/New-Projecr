@@ -76,14 +76,15 @@ def login_form():
 def login():
     phone_number = request.form.get('phone_number')
     password = request.form.get('password')
-    print(phone_number)
-    print(password)
 
-    if (phone_number, password):
-        session['phone_number'] = phone_number
-        return redirect(url_for('profile'))
+    with open('data/users.json', 'r', encoding='utf-8') as file:
+        users = json.load(file)
+    if phone_number in users and users[phone_number]["password"] == password:
+        session["phone_number"] = phone_number
+        return redirect(url_for('profile'))  
     else:
-        return "Login failed."
+        return "Phone number or password is incorrect"  
+
 
 
 @app.route('/save_text', methods=['GET', 'POST'])
@@ -119,9 +120,7 @@ def save_text():
     return jsonify(
         {'message': 'Text saved successfully', 'uuid': text_uuid}
     ), 200
-    # except Exception as e:
-    #     print(f'Error saving text: {e}')
-    #     return jsonify({'error': str(e)}), 500
+
 
 
 @app.route('/get_saved_texts')
@@ -130,26 +129,21 @@ def get_saved_texts():
         print(777777777777777)
         with open('data/node.json', 'r', encoding='utf-8') as file:
             nodes = json.load(file)
-        print(4444444444444444444)
         show_list = [
             nodes[key]["title"] for key in nodes if nodes[key]["user_phone"] \
                     == session.get("phone_number")
         ]
-        print(8888888888888888888888)
         return jsonify({'texts': show_list}), 200
     except Exception as e:
         print(f'Error fetching saved texts: {e}')
 
 
 
-
-
-
 @app.route('/profile/delete_text', methods=['POST'])
 def delete_text():
     data = request.get_json()
-    print("Received data:", data)  # Debug print
-    title = data.get('title')  # Change 'uuid' to 'title'
+    print("Received data:", data)  
+    title = data.get('title')  
 
     if not title:
         return jsonify({'message': 'No title provided'}), 400
@@ -159,7 +153,6 @@ def delete_text():
         return jsonify({'message': 'User not authenticated'}), 401
 
     try:
-        # Open and read the node.json file
         with open('data/node.json', 'r+') as file:
             nodes = json.load(file)
 
@@ -170,22 +163,17 @@ def delete_text():
                     break
 
             if text_id:
-                # Delete the specific text node
                 del nodes[text_id]
 
-                # Save the updated data back to the file
+                
                 file.seek(0)
                 file.truncate()
                 json.dump(nodes, file, indent=2)
 
-        # Update the users.json file
         with open('data/users.json', 'r+') as file2:
             users = json.load(file2)
             if current_user_phone in users:
-                # Remove the text ID from the user's node_ids list
                 users[current_user_phone]["node_ids"].remove(text_id)
-
-                # Save the updated data back to the file
                 file2.seek(0)
                 file2.truncate()
                 json.dump(users, file2, indent=2)

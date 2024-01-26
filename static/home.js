@@ -27,27 +27,10 @@ document.getElementById('registrationForm').addEventListener('submit',
     });
 });
 
-// document.getElementById('loginFormId').addEventListener('submit', 
-//     function (event) {
-//     event.preventDefault();
-
-//     let username = document.getElementById('username').value.trim();
-//     let password = document.getElementById('password').value.trim();
- 
-
-//     if (username === '' || password === '') {
-//         alert('Username and password are required.');
-//         return;
-//     }
-
-//     window.location.href = '/profile';
-// });
-
-
 document.getElementById('loginForm').addEventListener('submit', function (event) {
     event.preventDefault();
 
-    fetch('/login', {  // Update this to /login
+    fetch('/login', {  
         method: 'POST',
         body: new FormData(document.getElementById('loginForm'))
     })
