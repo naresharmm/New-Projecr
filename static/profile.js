@@ -45,6 +45,8 @@ class FormHandler {
         })
         .catch(error => alert('An error occurred. Please try again.'));
     }
+
+
     fetchAndDisplaySavedTexts() {
         fetch('/get_saved_texts')
         .then(response => {
@@ -67,7 +69,7 @@ class FormHandler {
                 const editButton = document.createElement('button');
                 editButton.innerHTML = '<i class="fas fa-pencil-alt"></i> ';
                 editButton.classList.add('edit-button'); 
-                editButton.onclick = function() { editNode(text); };
+                editButton.onclick = function() { editNode(text);location.reload(); };
                 row.insertCell(1).appendChild(editButton);
             
                 const deleteButton = document.createElement('button');
@@ -87,35 +89,6 @@ class FormHandler {
     }
     
 }
-function editNode(uuid) {
-    const textareaValue = document.querySelector('#myModal2 textarea').value.trim();
-
-    if (!textareaValue) {
-        alert('Please enter some text before editing.');
-        return;
-    }
-
-    fetch('/edit_text', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify({ text: textareaValue, uuid: uuid }), 
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert(data.message || 'Text edited successfully.');
-        formHandler2.closeForm();
-    })
-    .catch(error => alert('An error occurred while editing the text.'));
-}
-
 
 
 function deleteNodes(title) {
@@ -147,6 +120,35 @@ function deleteNodes(title) {
         alert('An error occurred while deleting the text: ' + error.message);
     });
 }
+
+
+function editNode(oldTitle) {
+    const newTitle = prompt(`Enter the new title for the text: ${oldTitle}`);
+    if (newTitle) {
+        fetch('/profile/edit_text', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ old_title: oldTitle, new_title: newTitle }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message || 'Text edited successfully.');
+            
+        })
+        .catch(error => {
+            console.error(error);
+            alert('An error occurred while editing the text: ' + error.message);
+        });
+    }
+}
+
 
 let formHandler1 = new FormHandler('myModal', () => alert('Text added!'), '');
 let formHandler2 = new FormHandler('myModal2', () => alert('Text edited or deleted!'), '');

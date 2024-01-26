@@ -183,6 +183,43 @@ def delete_text():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
+@app.route('/profile/edit_text', methods=['POST'])
+def edit_text():
+    data = request.get_json()
+    print("Received data:", data)  
+    old_title = data.get('old_title')
+    new_title = data.get('new_title')
+
+    if not old_title or not new_title:
+        return jsonify({'message': 'Title missing'}), 400
+
+    current_user_phone = session.get("phone_number")
+    if not current_user_phone:
+        return jsonify({'message': 'User not authenticated'}), 401
+
+    try:
+        with open('data/node.json', 'r+') as file:
+            nodes = json.load(file)
+
+            text_id = None
+            for node_id, node in nodes.items():
+                if node.get("user_phone") == current_user_phone and node.get("title") == old_title:
+                    text_id = node_id
+                    node["title"] = new_title
+                    break
+
+            if text_id is None:
+                return jsonify({'message': 'Text not found'}), 404
+
+            file.seek(0)
+            file.truncate()
+            json.dump(nodes, file, indent=2)
+
+        return jsonify({'message': 'Text edited successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=8080)
