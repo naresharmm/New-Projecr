@@ -1,9 +1,7 @@
 class FormHandler {
-    constructor(formId, submitCallback, uuid) { 
+    constructor(formId, submitCallback) { 
         this.formId = formId;
-        this.submitCallback = submitCallback;
-        this.uuid = uuid;
-        
+        this.submitCallback = submitCallback; 
     }
 
     openForm() {
@@ -51,24 +49,22 @@ class FormHandler {
     fetchAndDisplaySavedTexts() {
         fetch('/get_saved_texts')
         .then(response => {
-            console.log("aaaa", response)
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
-            console.log("data", data.texts)
-            const myListForm = document.getElementById(this.formId); console.log("FFF")
-            const textContainer = myListForm.querySelector('.modal-content textarea');
-            // textContainer.value = data.texts.map(text => text.title + ': ' + text.text).join('\n');
-            console.log("data", myListForm)
-            console.log("data", textContainer)
-            
+            const myListForm = document.getElementById('myModal2');
+            const textList = document.getElementById('textList');
+            textList.innerHTML = data.texts.map(text => `<li>${text}</li>`).join('\n');
         })
         .catch(error => alert('An error occurred while fetching saved texts.'));
     }
 }
+
+
+
 
 function editNode(uuid) {
     const textareaValue = document.querySelector('#myModal2 textarea').value.trim();
@@ -99,20 +95,19 @@ function editNode(uuid) {
     .catch(error => alert('An error occurred while editing the text.'));
 }
 
-function deleteNode(uuid) {
-    const confirmation = confirm('Are you sure you want to delete this text?');
+function deleteAllNodes() {
+    const confirmation = confirm('Are you sure you want to delete all texts?');
 
     if (!confirmation) {
         return;
     }
 
-    fetch('/delete_text', {
+    fetch('/delete_all_texts', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-        },
-        body: JSON.stringify({ uuid: uuid }), 
+        }
     })
     .then(response => {
         if (!response.ok) {
@@ -121,11 +116,13 @@ function deleteNode(uuid) {
         return response.json();
     })
     .then(data => {
-        alert(data.message || 'Text deleted successfully.');
+        alert(data.message || 'All texts deleted successfully.');
         formHandler2.closeForm();
+        fetchAndDisplaySavedTexts();
     })
     .catch(error => alert('Error'));
 }
+
 
 let formHandler1 = new FormHandler('myModal', () => alert('Text added!'), '');
 let formHandler2 = new FormHandler('myModal2', () => alert('Text edited or deleted!'), '');

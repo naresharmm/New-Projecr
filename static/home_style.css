@@ -5,10 +5,31 @@ body {
     padding: 0;
     text-align: center;
 }
-.registerBut{
-    width:100px;
-    height:500px;
+
+.registerBut,.loginBut {
+    width: 110px;
+    height: 50px;
+    background-color: #0b151f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    font-size: 18px;
+    text-decoration: none;
+    padding: 10px 20px;
 }
+
+.registerBut:hover {
+    background-color: #0056b3;
+}
+
+.loginBut {
+    width: 100px;
+    height: 100px;
+    background-color: aqua;
+}
+
 .container {
     width: 80%;
     height: 80%;
@@ -38,8 +59,8 @@ h1 {
     font-size: 18px;
     text-decoration: none;
     color: white;
-    width:10%;
-    height:20px;
+    width: 10%;
+    height: 20px;
     background-color: rebeccapurple;
 }
 
@@ -60,6 +81,7 @@ h1 {
     background-color: #555;
     color: white;
 }
+
 #registrationForm,
 #loginForm {
     display: none;
@@ -117,3 +139,5 @@ h1 {
     background-color: #b9df9e;
     color: black;
 }
+
+
