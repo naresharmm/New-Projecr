@@ -102,12 +102,8 @@ function deleteAllNodes() {
         return;
     }
 
-    fetch('/delete_all_texts', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        }
+    fetch('/profile/delete_all_texts', {
+        method: 'GET',
     })
     .then(response => {
         if (!response.ok) {

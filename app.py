@@ -140,5 +140,24 @@ def get_saved_texts():
     except Exception as e:
         print(f'Error fetching saved texts: {e}')
 
+@app.route('/profile/delete_all_texts')
+def delete_all():
+    current_user_phone = session["phone_number"]
+    with open('data/node.json', 'r+') as file:
+        nodes = json.load(file)
+        file.seek(0)
+        file.truncate()
+        keys_to_delete = [key for key in nodes.keys() if nodes[key]["user_phone"] == current_user_phone]
+        for key in keys_to_delete:
+            del nodes[key]
+        json.dump(nodes, file, indent=2)
+    with open('data/users.json', 'r+') as file2:
+        users = json.load(file2)
+        file2.seek(0)
+        file2.truncate()
+        users[current_user_phone]["node_ids"].clear()
+        json.dump(users, file2, indent=2)
+    return redirect(url_for('profile'))
+
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=8080)
