@@ -45,7 +45,6 @@ class FormHandler {
         })
         .catch(error => alert('An error occurred. Please try again.'));
     }
-
     fetchAndDisplaySavedTexts() {
         fetch('/get_saved_texts')
         .then(response => {
@@ -55,17 +54,39 @@ class FormHandler {
             return response.json();
         })
         .then(data => {
-            const myListForm = document.getElementById('myModal2');
-            const textList = document.getElementById('textList');
-            textList.innerHTML = data.texts.map(text => `<li>${text}</li>`).join('\n');
+            const container = document.getElementById('tableContainer');
+            container.innerHTML = ''; 
+            data.texts.forEach(text => {
+                const table = document.createElement('table');
+                table.className = 'text-table';
+            
+                const row = table.insertRow();
+                const textCell = row.insertCell(0);
+                textCell.textContent = text;
+            
+                const editButton = document.createElement('button');
+                editButton.innerHTML = '<i class="fas fa-pencil-alt"></i> ';
+                editButton.classList.add('edit-button'); 
+                editButton.onclick = function() { editNode(text); };
+                row.insertCell(1).appendChild(editButton);
+            
+                const deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '<i class="fas fa-times"></i>';
+                deleteButton.classList.add('delete-button'); 
+                deleteButton.onclick = function() { deleteNodes(text);location.reload(); };
+                row.insertCell(2).appendChild(deleteButton);
+                            
+                container.appendChild(table);
+                
+            });
+            
         })
-        .catch(error => alert('An error occurred while fetching saved texts.'));
+        .catch(error => {
+            alert('An error occurred while fetching saved texts: ' + error.message);
+        });
     }
+    
 }
-
-
-
-
 function editNode(uuid) {
     const textareaValue = document.querySelector('#myModal2 textarea').value.trim();
 
@@ -95,15 +116,21 @@ function editNode(uuid) {
     .catch(error => alert('An error occurred while editing the text.'));
 }
 
-function deleteAllNodes() {
-    const confirmation = confirm('Are you sure you want to delete all texts?');
+
+
+function deleteNodes(title) {
+    const confirmation = confirm(`Are you sure you want to delete the text with title: ${title}?`);
 
     if (!confirmation) {
         return;
     }
 
-    fetch('/profile/delete_all_texts', {
-        method: 'GET',
+    fetch('/profile/delete_text', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: title }), // Pass the title for deletion
     })
     .then(response => {
         if (!response.ok) {
@@ -112,13 +139,14 @@ function deleteAllNodes() {
         return response.json();
     })
     .then(data => {
-        alert(data.message || 'All texts deleted successfully.');
-        formHandler2.closeForm();
-        fetchAndDisplaySavedTexts();
+        alert(data.message || 'Text deleted successfully.');
+         
     })
-    .catch(error => alert('Error'));
+    .catch(error => {
+        console.error(error); // Log the full error object
+        alert('An error occurred while deleting the text: ' + error.message);
+    });
 }
-
 
 let formHandler1 = new FormHandler('myModal', () => alert('Text added!'), '');
 let formHandler2 = new FormHandler('myModal2', () => alert('Text edited or deleted!'), '');

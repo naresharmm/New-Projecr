@@ -83,7 +83,7 @@ def login():
         session['phone_number'] = phone_number
         return redirect(url_for('profile'))
     else:
-        return "Login failed. Invalid credentials."
+        return "Login failed."
 
 
 @app.route('/save_text', methods=['GET', 'POST'])
@@ -140,24 +140,61 @@ def get_saved_texts():
     except Exception as e:
         print(f'Error fetching saved texts: {e}')
 
-@app.route('/profile/delete_all_texts')
-def delete_all():
-    current_user_phone = session["phone_number"]
-    with open('data/node.json', 'r+') as file:
-        nodes = json.load(file)
-        file.seek(0)
-        file.truncate()
-        keys_to_delete = [key for key in nodes.keys() if nodes[key]["user_phone"] == current_user_phone]
-        for key in keys_to_delete:
-            del nodes[key]
-        json.dump(nodes, file, indent=2)
-    with open('data/users.json', 'r+') as file2:
-        users = json.load(file2)
-        file2.seek(0)
-        file2.truncate()
-        users[current_user_phone]["node_ids"].clear()
-        json.dump(users, file2, indent=2)
-    return redirect(url_for('profile'))
+
+
+
+
+
+@app.route('/profile/delete_text', methods=['POST'])
+def delete_text():
+    data = request.get_json()
+    print("Received data:", data)  # Debug print
+    title = data.get('title')  # Change 'uuid' to 'title'
+
+    if not title:
+        return jsonify({'message': 'No title provided'}), 400
+
+    current_user_phone = session.get("phone_number")
+    if not current_user_phone:
+        return jsonify({'message': 'User not authenticated'}), 401
+
+    try:
+        # Open and read the node.json file
+        with open('data/node.json', 'r+') as file:
+            nodes = json.load(file)
+
+            text_id = None
+            for node_id, node in nodes.items():
+                if node.get("user_phone") == current_user_phone and node.get("title") == title:
+                    text_id = node_id
+                    break
+
+            if text_id:
+                # Delete the specific text node
+                del nodes[text_id]
+
+                # Save the updated data back to the file
+                file.seek(0)
+                file.truncate()
+                json.dump(nodes, file, indent=2)
+
+        # Update the users.json file
+        with open('data/users.json', 'r+') as file2:
+            users = json.load(file2)
+            if current_user_phone in users:
+                # Remove the text ID from the user's node_ids list
+                users[current_user_phone]["node_ids"].remove(text_id)
+
+                # Save the updated data back to the file
+                file2.seek(0)
+                file2.truncate()
+                json.dump(users, file2, indent=2)
+
+        return jsonify({'message': 'Text deleted successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=8080)

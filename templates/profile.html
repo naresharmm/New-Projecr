@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile</title>
     <link rel="stylesheet" href="/static/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="/static/profile.js"></script>
 </head>
@@ -46,20 +48,13 @@
         </div>
 
         <div id="myModal2" class="modal">
-            <div class="modal-content">
+            <div class="modal-content" style="width:50%;height:80%;">
                 <span class="close" onclick="formHandler2.closeForm()">&times;</span>
-                <h2>Edit or Delete:</h2>
-                <form>
-                    <button type="button" onclick="editNode()">Edit</button>
-                    <button type="button" onclick="deleteAllNodes()">Delete</button>
-                    <button type="button" onclick="formHandler2.submitForm()">Save changes</button>
-                    <h2>My Nodes</h2>
-                    <ul id="textList" class="text-list"></ul> 
-                </form>
+                <h2>MyList</h2>
+                <div id="tableContainer"></div> 
             </div>
         </div>
         
-    </main>
 
     <footer>
         <p>Contact: your.email@example.com</p>

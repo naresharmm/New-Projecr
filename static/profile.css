@@ -217,3 +217,14 @@ footer {
         transform: translateY(0);
     }
 }
+.text-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.text-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+

@@ -1,7 +1,26 @@
 {
   "+37493674433": {
-    "email": "kiko@kkk.com",
+    "email": "nare@gmail.com",
     "password": "aaaAAA111",
     "node_ids": []
+  },
+  "+37499887721": {
+    "email": "alalal@ll.com",
+    "password": "aaaAAA111",
+    "node_ids": []
+  },
+  "+37499887777": {
+    "email": "ruben27@mail.ru",
+    "password": "rrrRRR444",
+    "node_ids": [
+      "757cc202-cb2a-4af0-b528-87030ab495cd"
+    ]
+  },
+  "+37499885588": {
+    "email": "tigran@lll.com",
+    "password": "aaaAAA111",
+    "node_ids": [
+      "6124091a-8a18-4381-ad5a-27d90f12ff43"
+    ]
   }
 }
