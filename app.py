@@ -33,7 +33,7 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-@app.route('/')
+@app.route('/home')
 def home():
     """Render the home page.
 
@@ -60,7 +60,7 @@ def register_form():
     Returns:
         str: The rendered HTML content of the registration form.
     """
-    return render_template('register.html', countries=get_countries())
+    return render_template('registration.html', countries=get_countries())
 
 @app.route('/register', methods=['POST'])
 def register():

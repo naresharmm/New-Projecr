@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/registration.css">
+    </head>
+</html>
+<div id="loginForm" style="margin-top:40px;" class="container hidden">
+    <h1>Login</h1>
+    <form method="POST" action="/login" id="loginFormId">
+        <label for="phone_number">Phone number:</label>
+        <input type="text" id="phone_number" name="phone_number"
+        required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password2" name="password" 
+        required><br><br>
+
+        <button id="loginBtn" style="background-color: rgb(94, 154, 145);border-radius: 5px;width:80px;height:40px;border:none;color:white;cursor:pointer;font-size:15px;" >Login</button>
+    </form>
+</div>
