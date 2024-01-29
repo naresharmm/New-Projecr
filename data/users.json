@@ -42,10 +42,13 @@
     "node_ids": []
   },
   "+37499668855": {
-    "email": "llplpl@ll.com",
+    "email": "alala@lala.com",
     "password": "aaaAAA111",
-    "node_ids": [
-      "eaa2bcba-59a5-4371-a18c-a7cd9fc1be74"
-    ]
+    "node_ids": []
+  },
+  "+37499665544": {
+    "email": "lastone@lll.com",
+    "password": "lllLLL555",
+    "node_ids": []
   }
 }

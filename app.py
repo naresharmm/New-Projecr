@@ -1,7 +1,8 @@
 import json
+import uuid
 from functools import wraps
 from datetime import datetime
-import uuid
+
 from flask import (
     Flask,
     render_template,
@@ -11,6 +12,7 @@ from flask import (
     url_for,
     session
 )
+
 from user import UserValidator
 from countries import get_countries
 
@@ -27,27 +29,42 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-
 @app.route('/')
 def home():
-    """Render the home page."""
+    """Render the home page.
+
+    Returns:
+        str: The rendered HTML content of the home page.
+    """
     countries: list[str] = get_countries()
     return render_template('home.html', countries=countries)
 
 @app.route('/profile')
 @login_required
 def profile():
-    """Render the user's profile page."""
+    """Render the user's profile page.
+
+    Returns:
+        str: The rendered HTML content of the user's profile page.
+    """
     return render_template('profile.html')
 
 @app.route('/register', methods=['GET'])
 def register_form():
-    """Render the registration form."""
+    """Render the registration form.
+
+    Returns:
+        str: The rendered HTML content of the registration form.
+    """
     return render_template('register.html', countries=get_countries())
 
 @app.route('/register', methods=['POST'])
 def register():
-    """Register a new user."""
+    """Register a new user.
+
+    Returns:
+        str: A redirection to the user's profile page if registration successful
+    """
     if UserValidator.validate_registration(request.form):
         with open('data/users.json', 'r+', encoding='utf-8') as file:
             users: dict = json.load(file)
@@ -63,16 +80,24 @@ def register():
             json.dump(users, file, indent=2)
         return redirect(url_for('profile'))
     else:
-        return "Data inputted wrong"
+        return "Wrong data inputted "
 
 @app.route('/login', methods=['GET'])
 def login_form():
-    """Render the login form."""
+    """Render the login form.
+
+    Returns:
+        str: The rendered HTML content of the login form.
+    """
     return render_template('login.html')
 
 @app.route('/login', methods=['POST'])
 def login():
-    """Log in an existing user."""
+    """Log in an existing user.
+
+    Returns:
+        str: A redirection to the user's profile page if login successful
+    """
     phone_number: str = request.form.get('phone_number')
     password: str = request.form.get('password')
 
@@ -86,7 +111,11 @@ def login():
 
 @app.route('/save_text', methods=['GET', 'POST'])
 def save_text():
-    """Save a text provided by the user."""
+    """Save a text provided by the user.
+
+    Returns:
+        str: A JSON response indicating whether the text was saved successfully.
+    """
     with open('data/node.json', 'r+', encoding='utf-8') as file:
         nodes: dict = json.load(file)
         file.seek(0)
@@ -121,7 +150,11 @@ def save_text():
 
 @app.route('/get_saved_texts')
 def get_saved_texts():
-    """Return the saved texts for  current user."""
+    """Return the saved texts for the current user.
+
+    Returns:
+        str: A JSON response containing the saved texts for the current user or an error message.
+    """
     try:
         with open('data/node.json', 'r', encoding='utf-8') as file:
             nodes: dict = json.load(file)
@@ -135,7 +168,11 @@ def get_saved_texts():
 
 @app.route('/profile/delete_text', methods=['POST'])
 def delete_text():
-    """Delete a text by its title """
+    """Delete a text by its title.
+
+    Returns:
+        str: A JSON response indicating whether the text was deleted successfully or an error message.
+    """
     data: dict = request.get_json()
     print("Received data:", data)  
     title: str = data.get('title')  
@@ -179,7 +216,11 @@ def delete_text():
 
 @app.route('/profile/edit_text', methods=['POST'])
 def edit_text():
-    """Edit the title of a text for the current user."""
+    """Edit the title of a text for the current user.
+
+    Returns:
+        str: A JSON response indicating whether the text title was edited successfully or an error message.
+    """
     data: dict = request.get_json()
     print("Received data:", data)  
     old_title: str = data.get('old_title')

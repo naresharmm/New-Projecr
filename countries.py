@@ -1,7 +1,8 @@
 '''Country.py
 '''
-import json
 import os
+import json
+
 
 def get_countries():
     ''' function
