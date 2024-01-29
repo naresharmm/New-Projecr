@@ -30,7 +30,7 @@ class FormHandler {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({ user_phone: this.uuid, text: textareaValue, title: titleValue }), // Changed uuid to user_phone
+            body: JSON.stringify({ uuid: this.uuid, text: textareaValue, title: titleValue }), 
         })
         .then(response => {
             if (!response.ok) {

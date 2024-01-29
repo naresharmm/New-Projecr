@@ -1,7 +1,6 @@
 import json
 from functools import wraps
 from datetime import datetime
-
 import uuid
 from flask import (
     Flask,
@@ -12,7 +11,6 @@ from flask import (
     url_for,
     session
 )
-
 from user import UserValidator
 from countries import get_countries
 
@@ -22,6 +20,7 @@ app.secret_key = 'your_secret_key_here'
 def login_required(view):
     @wraps(view)
     def wrapped_view(**kwargs):
+        """Check if the user is logged in before accessing a view."""
         if not session.get("phone_number", None):
             return redirect(url_for('home'))
 
@@ -31,30 +30,30 @@ def login_required(view):
 
 @app.route('/')
 def home():
-    countries = get_countries()
+    """Render the home page."""
+    countries: list[str] = get_countries()
     return render_template('home.html', countries=countries)
-
 
 @app.route('/profile')
 @login_required
 def profile():
+    """Render the user's profile page."""
     return render_template('profile.html')
-
 
 @app.route('/register', methods=['GET'])
 def register_form():
+    """Render the registration form."""
     return render_template('register.html', countries=get_countries())
-
-
 
 @app.route('/register', methods=['POST'])
 def register():
+    """Register a new user."""
     if UserValidator.validate_registration(request.form):
         with open('data/users.json', 'r+', encoding='utf-8') as file:
-            users = json.load(file)
+            users: dict = json.load(file)
             file.seek(0)
             file.truncate()
-            user_phone = request.form.get("phone_number")
+            user_phone: str = request.form.get("phone_number")
             session["phone_number"] = user_phone
             users[user_phone] = {
                 "email": request.form.get('email'),
@@ -66,39 +65,38 @@ def register():
     else:
         return "Data inputted wrong"
 
-
 @app.route('/login', methods=['GET'])
 def login_form():
+    """Render the login form."""
     return render_template('login.html')
-
 
 @app.route('/login', methods=['POST'])
 def login():
-    phone_number = request.form.get('phone_number')
-    password = request.form.get('password')
+    """Log in an existing user."""
+    phone_number: str = request.form.get('phone_number')
+    password: str = request.form.get('password')
 
     with open('data/users.json', 'r', encoding='utf-8') as file:
-        users = json.load(file)
+        users: dict = json.load(file)
     if phone_number in users and users[phone_number]["password"] == password:
         session["phone_number"] = phone_number
         return redirect(url_for('profile'))  
     else:
-        return "Phone number or password is incorrect"  
-
-
+        return "Phone number or password is incorrect"
 
 @app.route('/save_text', methods=['GET', 'POST'])
 def save_text():
+    """Save a text provided by the user."""
     with open('data/node.json', 'r+', encoding='utf-8') as file:
-        nodes = json.load(file)
+        nodes: dict = json.load(file)
         file.seek(0)
 
-        user_phone = session.get("phone_number")
-        request_data = json.loads(request.get_data().decode("utf-8"))
-        text = request_data.get("text")
-        title = request_data.get("title")
+        user_phone: str = session.get("phone_number")
+        request_data: dict = json.loads(request.get_data().decode("utf-8"))
+        text: str = request_data.get("text")
+        title: str = request_data.get("title")
         if text and title:
-            text_uuid = str(uuid.uuid4())
+            text_uuid: str = str(uuid.uuid4())
 
             nodes[text_uuid] = {
                 "title": title,
@@ -109,7 +107,7 @@ def save_text():
             json.dump(nodes, file, indent=2)
 
     with open('data/users.json', 'r+', encoding='utf-8') as file:
-        users = json.load(file)
+        users: dict = json.load(file)
 
         file.seek(0)
 
@@ -121,15 +119,13 @@ def save_text():
         {'message': 'Text saved successfully', 'uuid': text_uuid}
     ), 200
 
-
-
 @app.route('/get_saved_texts')
 def get_saved_texts():
+    """Return the saved texts for  current user."""
     try:
-        print(777777777777777)
         with open('data/node.json', 'r', encoding='utf-8') as file:
-            nodes = json.load(file)
-        show_list = [
+            nodes: dict = json.load(file)
+        show_list: list[str] = [
             nodes[key]["title"] for key in nodes if nodes[key]["user_phone"] \
                     == session.get("phone_number")
         ]
@@ -137,26 +133,25 @@ def get_saved_texts():
     except Exception as e:
         print(f'Error fetching saved texts: {e}')
 
-
-
 @app.route('/profile/delete_text', methods=['POST'])
 def delete_text():
-    data = request.get_json()
+    """Delete a text by its title """
+    data: dict = request.get_json()
     print("Received data:", data)  
-    title = data.get('title')  
+    title: str = data.get('title')  
 
     if not title:
         return jsonify({'message': 'No title provided'}), 400
 
-    current_user_phone = session.get("phone_number")
+    current_user_phone: str = session.get("phone_number")
     if not current_user_phone:
         return jsonify({'message': 'User not authenticated'}), 401
 
     try:
         with open('data/node.json', 'r+') as file:
-            nodes = json.load(file)
+            nodes: dict = json.load(file)
 
-            text_id = None
+            text_id: str = None
             for node_id, node in nodes.items():
                 if node.get("user_phone") == current_user_phone and node.get("title") == title:
                     text_id = node_id
@@ -165,13 +160,12 @@ def delete_text():
             if text_id:
                 del nodes[text_id]
 
-                
                 file.seek(0)
                 file.truncate()
                 json.dump(nodes, file, indent=2)
 
         with open('data/users.json', 'r+') as file2:
-            users = json.load(file2)
+            users: dict = json.load(file2)
             if current_user_phone in users:
                 users[current_user_phone]["node_ids"].remove(text_id)
                 file2.seek(0)
@@ -185,23 +179,24 @@ def delete_text():
 
 @app.route('/profile/edit_text', methods=['POST'])
 def edit_text():
-    data = request.get_json()
+    """Edit the title of a text for the current user."""
+    data: dict = request.get_json()
     print("Received data:", data)  
-    old_title = data.get('old_title')
-    new_title = data.get('new_title')
+    old_title: str = data.get('old_title')
+    new_title: str = data.get('new_title')
 
     if not old_title or not new_title:
         return jsonify({'message': 'Title missing'}), 400
 
-    current_user_phone = session.get("phone_number")
+    current_user_phone: str = session.get("phone_number")
     if not current_user_phone:
         return jsonify({'message': 'User not authenticated'}), 401
 
     try:
         with open('data/node.json', 'r+') as file:
-            nodes = json.load(file)
+            nodes: dict = json.load(file)
 
-            text_id = None
+            text_id: str = None
             for node_id, node in nodes.items():
                 if node.get("user_phone") == current_user_phone and node.get("title") == old_title:
                     text_id = node_id
@@ -219,7 +214,6 @@ def edit_text():
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=8080)

@@ -35,5 +35,17 @@
       "d3b865f4-f106-483b-8857-8e0a44538a2e",
       "9cf3e4bf-c817-46d1-ad10-fddca9d1e757"
     ]
+  },
+  "+37498855874": {
+    "email": "haykshahbaz@gmail.com",
+    "password": "qwert12345Q",
+    "node_ids": []
+  },
+  "+37499668855": {
+    "email": "llplpl@ll.com",
+    "password": "aaaAAA111",
+    "node_ids": [
+      "eaa2bcba-59a5-4371-a18c-a7cd9fc1be74"
+    ]
   }
 }
