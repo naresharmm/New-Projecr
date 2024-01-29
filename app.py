@@ -88,6 +88,11 @@ def register():
     else:
         return "Data inputted wrong"
 
+def decrypt_password(encrypted_password):
+    cipher_suite = Fernet(key)
+    decrypted_password = cipher_suite.decrypt(encrypted_password.encode()).decode()
+    return decrypted_password
+
 @app.route('/login', methods=['GET'])
 def login_form():
     """Render the login form.
@@ -105,15 +110,20 @@ def login():
         str: A redirection to the user's profile page if login is successful, or an error message if login fails.
     """
     phone_number: str = request.form.get('phone_number')
-    password: str = request.form.get('password')
+    provided_password: str = request.form.get('password')
     
     with open('data/users.json', 'r', encoding='utf-8') as file:
         users: dict = json.load(file)
-    if phone_number in users and users[phone_number]["password"] == password:
-        session["phone_number"] = phone_number
-        return redirect(url_for('profile'))  
-    else:
-        return "Phone number or password is incorrect"
+        
+    if phone_number in users:
+        encrypted_password = users[phone_number]["password"]
+        decrypted_password = decrypt_password(encrypted_password)
+
+        if provided_password == decrypted_password:
+            session["phone_number"] = phone_number
+            return redirect(url_for('profile'))
+
+    return "Phone number or password is incorrect"
 
 @app.route('/save_text', methods=['GET', 'POST'])
 def save_text():
@@ -132,7 +142,6 @@ def save_text():
         title: str = request_data.get("title")
         if text and title:
             text_uuid: str = str(uuid.uuid4())
-
             nodes[text_uuid] = {
                 "title": title,
                 "text": text,
