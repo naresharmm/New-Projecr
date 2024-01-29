@@ -33,7 +33,7 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-@app.route('/home')
+@app.route('/')
 def home():
     """Render the home page.
 
@@ -42,6 +42,11 @@ def home():
     """
     countries: list[str] = get_countries()
     return render_template('home.html', countries=countries)
+
+@app.route('/home')
+def home_second():
+    return render_template('home.html')
+
 
 @app.route('/profile')
 @login_required
