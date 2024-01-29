@@ -21,9 +21,9 @@
         <form method="POST" action="/register" id="yourFormId">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br><br>
-
             <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required><br><br>
+            <input type="email" pattern="[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}" title="Email should be up to 10 characters @ up to 10 characters . up to 10 characters" name="email" id="email" required>
+
 
             <label for="phone_number">Phone number:</label>
             <input type="text" id="phone_number" name="phone_number" 

@@ -12,9 +12,13 @@ from flask import (
     url_for,
     session
 )
+from cryptography.fernet import Fernet
 
 from user import UserValidator
 from countries import get_countries
+
+key = Fernet.generate_key()
+cipher_suite = Fernet(key)
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -63,8 +67,10 @@ def register():
     """Register a new user.
 
     Returns:
-        str: A redirection to the user's profile page if registration successful
+        str: A redirection to the user's profile page if registration is successful, or an error message if registration fails.
     """
+    password_form = request.form.get("password")
+    encrypted_password = cipher_suite.encrypt(password_form.encode()).decode()
     if UserValidator.validate_registration(request.form):
         with open('data/users.json', 'r+', encoding='utf-8') as file:
             users: dict = json.load(file)
@@ -74,13 +80,13 @@ def register():
             session["phone_number"] = user_phone
             users[user_phone] = {
                 "email": request.form.get('email'),
-                "password": request.form.get('password'),
+                "password": encrypted_password,
                 "node_ids": []
             }
             json.dump(users, file, indent=2)
         return redirect(url_for('profile'))
     else:
-        return "Wrong data inputted "
+        return "Data inputted wrong"
 
 @app.route('/login', methods=['GET'])
 def login_form():
@@ -96,11 +102,11 @@ def login():
     """Log in an existing user.
 
     Returns:
-        str: A redirection to the user's profile page if login successful
+        str: A redirection to the user's profile page if login is successful, or an error message if login fails.
     """
     phone_number: str = request.form.get('phone_number')
     password: str = request.form.get('password')
-
+    
     with open('data/users.json', 'r', encoding='utf-8') as file:
         users: dict = json.load(file)
     if phone_number in users and users[phone_number]["password"] == password:
@@ -114,7 +120,7 @@ def save_text():
     """Save a text provided by the user.
 
     Returns:
-        str: A JSON response indicating whether the text was saved successfully.
+        str: A JSON response indicating whether the text was saved successfully or an error message.
     """
     with open('data/node.json', 'r+', encoding='utf-8') as file:
         nodes: dict = json.load(file)

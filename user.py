@@ -27,7 +27,7 @@ class UserValidator:
 
     def is_valid_email(email):
         ''' Checks email validation '''
-        return re.match(r'^\w+@[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$', email)
+        return re.match(r'^[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}$', email)
 
     def is_valid_password(password, password2):
         ''' Checks password validation '''
