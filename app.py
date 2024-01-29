@@ -1,8 +1,7 @@
 import json
-import uuid
 from functools import wraps
 from datetime import datetime
-
+import uuid
 from flask import (
     Flask,
     render_template,
@@ -12,17 +11,16 @@ from flask import (
     url_for,
     session
 )
-from cryptography.fernet import Fernet
-
 from user import UserValidator
 from countries import get_countries
-
-key = Fernet.generate_key()
-cipher_suite = Fernet(key)
+from cryptography.fernet import Fernet
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
+key = Fernet.generate_key()
+cipher_suite = Fernet(key)
+	
 def login_required(view):
     @wraps(view)
     def wrapped_view(**kwargs):
@@ -31,49 +29,28 @@ def login_required(view):
             return redirect(url_for('home'))
 
         return view(**kwargs)
-
     return wrapped_view
+
 @app.route('/')
 def home():
-    """Render the home page.
-
-    Returns:
-        str: The rendered HTML content of the home page.
-    """
+    """Render the home page."""
     countries: list[str] = get_countries()
     return render_template('home.html', countries=countries)
-
-@app.route('/home')
-def home_second():
-    return render_template('home.html')
-
 
 @app.route('/profile')
 @login_required
 def profile():
-    """Render the user's profile page.
-
-    Returns:
-        str: The rendered HTML content of the user's profile page.
-    """
+    """Render the user's profile page."""
     return render_template('profile.html')
 
 @app.route('/register', methods=['GET'])
 def register_form():
-    """Render the registration form.
-
-    Returns:
-        str: The rendered HTML content of the registration form.
-    """
+    """Render the registration form."""
     return render_template('registration.html', countries=get_countries())
 
 @app.route('/register', methods=['POST'])
 def register():
-    """Register a new user.
-
-    Returns:
-        str: A redirection to the user's profile page if registration is successful, or an error message if registration fails.
-    """
+    """Register a new user."""
     password_form = request.form.get("password")
     encrypted_password = cipher_suite.encrypt(password_form.encode()).decode()
     if UserValidator.validate_registration(request.form):
@@ -93,50 +70,28 @@ def register():
     else:
         return "Data inputted wrong"
 
-def decrypt_password(encrypted_password):
-    cipher_suite = Fernet(key)
-    decrypted_password = cipher_suite.decrypt(encrypted_password.encode()).decode()
-    return decrypted_password
-
 @app.route('/login', methods=['GET'])
 def login_form():
-    """Render the login form.
-
-    Returns:
-        str: The rendered HTML content of the login form.
-    """
+    """Render the login form."""
     return render_template('login.html')
 
 @app.route('/login', methods=['POST'])
 def login():
-    """Log in an existing user.
-
-    Returns:
-        str: A redirection to the user's profile page if login is successful, or an error message if login fails.
-    """
+    """Log in an existing user."""
     phone_number: str = request.form.get('phone_number')
-    provided_password: str = request.form.get('password')
-    
+    password: str = request.form.get('password')
+
     with open('data/users.json', 'r', encoding='utf-8') as file:
         users: dict = json.load(file)
-        
-    if phone_number in users:
-        encrypted_password = users[phone_number]["password"]
-        decrypted_password = decrypt_password(encrypted_password)
-
-        if provided_password == decrypted_password:
-            session["phone_number"] = phone_number
-            return redirect(url_for('profile'))
-
-    return "Phone number or password is incorrect"
+    if phone_number in users and users[phone_number]["password"] == password:
+        session["phone_number"] = phone_number
+        return redirect(url_for('profile'))  
+    else:
+        return "Phone number or password is incorrect"
 
 @app.route('/save_text', methods=['GET', 'POST'])
 def save_text():
-    """Save a text provided by the user.
-
-    Returns:
-        str: A JSON response indicating whether the text was saved successfully or an error message.
-    """
+    """Save a text provided by the user."""
     with open('data/node.json', 'r+', encoding='utf-8') as file:
         nodes: dict = json.load(file)
         file.seek(0)
@@ -147,6 +102,7 @@ def save_text():
         title: str = request_data.get("title")
         if text and title:
             text_uuid: str = str(uuid.uuid4())
+
             nodes[text_uuid] = {
                 "title": title,
                 "text": text,
@@ -161,20 +117,14 @@ def save_text():
         file.seek(0)
 
         users[user_phone]['node_ids'].append(text_uuid)
-
         json.dump(users, file, indent=2)
-
     return jsonify(
         {'message': 'Text saved successfully', 'uuid': text_uuid}
     ), 200
 
 @app.route('/get_saved_texts')
 def get_saved_texts():
-    """Return the saved texts for the current user.
-
-    Returns:
-        str: A JSON response containing the saved texts for the current user or an error message.
-    """
+    """Return the saved texts for  current user."""
     try:
         with open('data/node.json', 'r', encoding='utf-8') as file:
             nodes: dict = json.load(file)
@@ -188,11 +138,7 @@ def get_saved_texts():
 
 @app.route('/profile/delete_text', methods=['POST'])
 def delete_text():
-    """Delete a text by its title.
-
-    Returns:
-        str: A JSON response indicating whether the text was deleted successfully or an error message.
-    """
+    """Delete a text by its title """
     data: dict = request.get_json()
     print("Received data:", data)  
     title: str = data.get('title')  
@@ -213,7 +159,6 @@ def delete_text():
                 if node.get("user_phone") == current_user_phone and node.get("title") == title:
                     text_id = node_id
                     break
-
             if text_id:
                 del nodes[text_id]
 
@@ -228,19 +173,13 @@ def delete_text():
                 file2.seek(0)
                 file2.truncate()
                 json.dump(users, file2, indent=2)
-
         return jsonify({'message': 'Text deleted successfully'}), 200
-
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
 @app.route('/profile/edit_text', methods=['POST'])
 def edit_text():
-    """Edit the title of a text for the current user.
-
-    Returns:
-        str: A JSON response indicating whether the text title was edited successfully or an error message.
-    """
+    """Edit the title of a text for the current user."""
     data: dict = request.get_json()
     print("Received data:", data)  
     old_title: str = data.get('old_title')
@@ -263,16 +202,12 @@ def edit_text():
                     text_id = node_id
                     node["title"] = new_title
                     break
-
             if text_id is None:
                 return jsonify({'message': 'Text not found'}), 404
-
             file.seek(0)
             file.truncate()
             json.dump(nodes, file, indent=2)
-
         return jsonify({'message': 'Text edited successfully'}), 200
-
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 

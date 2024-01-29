@@ -3,27 +3,22 @@ class FormHandler {
         this.formId = formId;
         this.submitCallback = submitCallback; 
     }
-
     openForm() {
         if (this.formId === 'myModal2') {
             this.fetchAndDisplaySavedTexts();
         }
         document.getElementById(this.formId).style.display = 'flex';
     }
-
     closeForm() {
         document.getElementById(this.formId).style.display = 'none';
     }
-
     submitForm() {
         const textareaValue = document.querySelector('#' + this.formId + ' textarea').value.trim();
         const titleValue = document.querySelector('#' + this.formId + ' input[name="title"]').value.trim();
-
         if (!textareaValue || !titleValue) {
             alert('Please enter both title and text.');
             return;
         }
-
         fetch('/save_text', {
             method: 'POST',
             headers: {
@@ -45,8 +40,6 @@ class FormHandler {
         })
         .catch(error => alert('An error occurred. Please try again.'));
     }
-
-
     fetchAndDisplaySavedTexts() {
         fetch('/get_saved_texts')
         .then(response => {
@@ -89,15 +82,11 @@ class FormHandler {
     }
     
 }
-
-
 function deleteNodes(title) {
     const confirmation = confirm(`Are you sure you want to delete the text with title: ${title}?`);
-
     if (!confirmation) {
         return;
     }
-
     fetch('/profile/delete_text', {
         method: 'POST',
         headers: {
@@ -120,8 +109,6 @@ function deleteNodes(title) {
         alert('An error occurred while deleting the text: ' + error.message);
     });
 }
-
-
 function editNode(oldTitle) {
     const newTitle = prompt(`Enter the new title for the text: ${oldTitle}`);
     if (newTitle) {
@@ -148,7 +135,5 @@ function editNode(oldTitle) {
         });
     }
 }
-
-
 let formHandler1 = new FormHandler('myModal', () => alert('Text added!'), '');
 let formHandler2 = new FormHandler('myModal2', () => alert('Text edited or deleted!'), '');

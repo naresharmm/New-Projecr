@@ -43,9 +43,11 @@
                         placeholder="Enter your text...">{{ request.form['text'] }}</textarea><br><br>
 
                     <button type="button" onclick="formHandler1.submitForm()">Send</button>
+                    
                 </form>
             </div>
         </div>
+        <button id="logout-button" type="button" onclick="window.location.href='/'">Log Out</button>
 
         <div id="myModal2" class="modal">
             <div class="modal-content" style="width:50%;height:80%;">
@@ -54,11 +56,14 @@
                 <div id="tableContainer"></div> 
             </div>
         </div>
-        <button id="logout-button" type="button" onclick="window.location.href='/home'">Log Out</button>
-
+       
     <footer>
         <p>Contact: your.email@example.com</p>
+     
     </footer>
 </body>
 
 </html>
+
+
+
