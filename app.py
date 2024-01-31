@@ -139,7 +139,6 @@ def save_text():
 
     text_uuid: str = str(uuid.uuid4())
 
-    # Read and update nodes
     with open('data/node.json', 'r', encoding='utf-8') as file:
         nodes = json.load(file)
 
@@ -149,17 +148,13 @@ def save_text():
         "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
-    # Write updated nodes back to file
+
     with open('data/node.json', 'w', encoding='utf-8') as file:
         json.dump(nodes, file, indent=2)
-
-    # Read and update users
     with open('data/users.json', 'r', encoding='utf-8') as file:
         users = json.load(file)
 
     users[user_phone]['node_ids'].append(text_uuid)
-
-    # Write updated users back to file
     with open('data/users.json', 'w', encoding='utf-8') as file:
         json.dump(users, file, indent=2)
 
@@ -205,31 +200,29 @@ def delete_text():
         return jsonify({'message': 'User not authenticated'}), 401
 
     try:
-        with open('data/users.json', 'r+', encoding='utf-8') as users_file:
+        with open('data/users.json', 'r', encoding='utf-8') as users_file:
             users = json.load(users_file)
             user_node_ids = users[current_user_phone]["node_ids"]
-
-        with open('data/node.json', 'r+', encoding='utf-8') as nodes_file:
+        with open('data/node.json', 'r', encoding='utf-8') as nodes_file:
             nodes = json.load(nodes_file)
             text_id = next((nid for nid in user_node_ids if nodes[nid]["title"] == title), None)
 
-            if text_id:
-                del nodes[text_id]
-                users_file.seek(0)
-                json.dump(users, users_file, indent=2)
-                users_file.truncate()
-
-                nodes_file.seek(0)
+        if text_id:
+            # Delete the text and update files
+            del nodes[text_id]
+            user_node_ids.remove(text_id)
+            with open('data/node.json', 'w', encoding='utf-8') as nodes_file:
                 json.dump(nodes, nodes_file, indent=2)
-                nodes_file.truncate()
+            with open('data/users.json', 'w', encoding='utf-8') as users_file:
+                json.dump(users, users_file, indent=2)
 
-                users[current_user_phone]["node_ids"].remove(text_id)
-                return jsonify({'message': 'Text deleted successfully'}), 200
-            else:
-                return jsonify({'message': 'Text not found'}), 404
+            return jsonify({'message': 'Text deleted successfully'}), 200
+        else:
+            return jsonify({'message': 'Text not found'}), 404
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
+
 
 @app.route('/profile/edit_text', methods=['POST'])
 def edit_text():
