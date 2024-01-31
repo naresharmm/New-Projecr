@@ -7,7 +7,7 @@ body, h1 {
 
 /* Gradient background and centering text */
 body {
-    background: linear-gradient(to right, #91d3f4, #2ebf91); /* Adjust gradient colors as needed */
+    background: linear-gradient(to right, #c0e7fa, #2ebf91); /* Adjust gradient colors as needed */
     text-align: center;
     height: 40%; /* Full viewport height */
     display: flex;
@@ -46,9 +46,10 @@ h2 {
 .container {
     background-color: white;
     padding: 40px;
-    border-radius: 10px;
+    border-radius: 14px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-    width: 280px; /* Fixed width for the container */
+    width: 330px; /* Fixed width for the container */
+    margin-top:20px;
 }
 
 /* Form styling */
@@ -82,16 +83,6 @@ h2 {
     text-align: center; /* Center the button container */
 }
 
-/* Social media buttons with icons */
-.social-btn {
-    font-size: 20px; /* Larger font size for icons */
-    margin: 0 5px; /* Spacing between buttons */
-}
-
-/* Social media buttons hover effect */
-.social-btn:hover {
-    opacity: 0.7; 
-}
 
 .switch {
     font-size: 14px;

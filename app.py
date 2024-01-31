@@ -83,7 +83,8 @@ def login():
 
     with open('data/users.json', 'r', encoding='utf-8') as file:
         users: dict = json.load(file)
-    if phone_number in users and users[phone_number]["password"] == password:
+    if phone_number in users and users[phone_number]["password"] == password: 
+        #make users[phone_number]['password']decoded/decrypted == pasword
         session["phone_number"] = phone_number
         return redirect(url_for('profile'))  
     else:
