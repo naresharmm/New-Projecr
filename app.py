@@ -47,7 +47,14 @@ def home():
         str: The rendered HTML content of the home page.
     """
     countries: list[str] = get_countries()
-    return render_template('home.html', countries=countries)
+    
+    # Check if the user is logged in
+    if session.get("phone_number"):
+        login_status = "Logged in as: " + session["phone_number"]
+    else:
+        login_status = "Not logged in"
+    
+    return render_template('home.html', countries=countries, login_status=login_status)
 
 @app.route('/profile')
 @login_required
@@ -123,6 +130,17 @@ def login():
         return redirect(url_for('profile'))
     else:
         return "Phone number or password is incorrect"
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    """
+    Log out the current user and clear their session.
+
+    Returns:
+        str: A redirection to the home page.
+    """
+    session.clear()
+    return redirect(url_for('home'))
 
 @app.route('/save_text', methods=['GET', 'POST'])
 def save_text():
