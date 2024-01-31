@@ -126,34 +126,45 @@ def login():
 
 @app.route('/save_text', methods=['GET', 'POST'])
 def save_text():
-    """
-    Save a text provided by the user.
+    request_data: dict = json.loads(request.get_data().decode("utf-8"))
+    text: str = request_data.get("text")
+    title: str = request_data.get("title")
 
-    Returns:
-        str: A JSON response indicating whether the text was saved successfully or an error message.
-    """
-    with open('data/node.json', 'r+', encoding='utf-8') as file:
-        nodes: dict = json.load(file)
-        file.seek(0)
-        user_phone: str = session.get("phone_number")
-        request_data: dict = json.loads(request.get_data().decode("utf-8"))
-        text: str = request_data.get("text")
-        title: str = request_data.get("title")
-        if text and title:
-            text_uuid: str = str(uuid.uuid4())
-            nodes[text_uuid] = {
-                "title": title,
-                "text": text,
-                "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "user_phone": user_phone
-            }
-            json.dump(nodes, file, indent=2)
-    with open('data/users.json', 'r+', encoding='utf-8') as file:
-        users: dict = json.load(file)
-        file.seek(0)
-        users[user_phone]['node_ids'].append(text_uuid)
+    if not text or not title:
+        return jsonify({'message': 'Text or title missing'}), 400
+
+    user_phone: str = session.get("phone_number")
+    if not user_phone:
+        return jsonify({'message': 'User not authenticated'}), 401
+
+    text_uuid: str = str(uuid.uuid4())
+
+    # Read and update nodes
+    with open('data/node.json', 'r', encoding='utf-8') as file:
+        nodes = json.load(file)
+
+    nodes[text_uuid] = {
+        "title": title,
+        "text": text,
+        "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    # Write updated nodes back to file
+    with open('data/node.json', 'w', encoding='utf-8') as file:
+        json.dump(nodes, file, indent=2)
+
+    # Read and update users
+    with open('data/users.json', 'r', encoding='utf-8') as file:
+        users = json.load(file)
+
+    users[user_phone]['node_ids'].append(text_uuid)
+
+    # Write updated users back to file
+    with open('data/users.json', 'w', encoding='utf-8') as file:
         json.dump(users, file, indent=2)
+
     return jsonify({'message': 'Text saved successfully', 'uuid': text_uuid}), 200
+
 
 @app.route('/get_saved_texts')
 def get_saved_texts():
@@ -163,15 +174,18 @@ def get_saved_texts():
     Returns:
         str: A JSON response containing the saved texts for the current user or an error message.
     """
-    try:
-        with open('data/node.json', 'r', encoding='utf-8') as file:
-            nodes: dict = json.load(file)
-        show_list: list[str] = [
-            nodes[key]["title"] for key in nodes if nodes[key]["user_phone"] == session.get("phone_number")
-        ]
-        return jsonify({'texts': show_list}), 200
-    except Exception as e:
-        print(f'Error fetching saved texts: {e}')
+    user_phone = session.get("phone_number")
+    with open('data/users.json', 'r', encoding='utf-8') as users_file:
+        users = json.load(users_file)
+        user_node_ids = users[user_phone]['node_ids']
+
+    with open('data/node.json', 'r', encoding='utf-8') as nodes_file:
+        nodes = json.load(nodes_file)
+        user_texts = [nodes[node_id] for node_id in user_node_ids if node_id in nodes]
+
+    return jsonify({'texts': [text["title"] for text in user_texts]}), 200
+
+
 
 @app.route('/profile/delete_text', methods=['POST'])
 def delete_text():
@@ -182,34 +196,38 @@ def delete_text():
         str: A JSON response indicating whether the text was deleted successfully or an error message.
     """
     data: dict = request.get_json()
-    print("Received data:", data)
     title: str = data.get('title')
     if not title:
         return jsonify({'message': 'No title provided'}), 400
+
     current_user_phone: str = session.get("phone_number")
     if not current_user_phone:
         return jsonify({'message': 'User not authenticated'}), 401
+
     try:
-        with open('data/node.json', 'r+', encoding='utf-8') as file:
-            nodes: dict = json.load(file)
-            text_id: str = None
-            for node_id, node in nodes.items():
-                if node.get("user_phone") == current_user_phone and node.get("title") == title:
-                    text_id = node_id
-                    break
+        with open('data/users.json', 'r+', encoding='utf-8') as users_file:
+            users = json.load(users_file)
+            user_node_ids = users[current_user_phone]["node_ids"]
+
+        with open('data/node.json', 'r+', encoding='utf-8') as nodes_file:
+            nodes = json.load(nodes_file)
+            text_id = next((nid for nid in user_node_ids if nodes[nid]["title"] == title), None)
+
             if text_id:
                 del nodes[text_id]
-                file.seek(0)
-                file.truncate()
-                json.dump(nodes, file, indent=2)
-        with open('data/users.json', 'r+', encoding='utf-8') as file2:
-            users: dict = json.load(file2)
-            if current_user_phone in users:
+                users_file.seek(0)
+                json.dump(users, users_file, indent=2)
+                users_file.truncate()
+
+                nodes_file.seek(0)
+                json.dump(nodes, nodes_file, indent=2)
+                nodes_file.truncate()
+
                 users[current_user_phone]["node_ids"].remove(text_id)
-                file2.seek(0)
-                file2.truncate()
-                json.dump(users, file2, indent=2)
-        return jsonify({'message': 'Text deleted successfully'}), 200
+                return jsonify({'message': 'Text deleted successfully'}), 200
+            else:
+                return jsonify({'message': 'Text not found'}), 404
+
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
@@ -222,29 +240,33 @@ def edit_text():
         str: A JSON response indicating whether the text title was edited successfully or an error message.
     """
     data: dict = request.get_json()
-    print("Received data:", data)
     old_title: str = data.get('old_title')
     new_title: str = data.get('new_title')
     if not old_title or not new_title:
         return jsonify({'message': 'Title missing'}), 400
+
     current_user_phone: str = session.get("phone_number")
     if not current_user_phone:
         return jsonify({'message': 'User not authenticated'}), 401
+
     try:
-        with open('data/node.json', 'r+', encoding='utf-8') as file:
-            nodes: dict = json.load(file)
-            text_id: str = None
-            for node_id, node in nodes.items():
-                if node.get("user_phone") == current_user_phone and node.get("title") == old_title:
-                    text_id = node_id
-                    node["title"] = new_title
-                    break
-            if text_id is None:
+        with open('data/users.json', 'r', encoding='utf-8') as users_file:
+            users = json.load(users_file)
+            user_node_ids = users[current_user_phone]["node_ids"]
+
+        with open('data/node.json', 'r+', encoding='utf-8') as nodes_file:
+            nodes = json.load(nodes_file)
+            text_id = next((nid for nid in user_node_ids if nodes[nid]["title"] == old_title), None)
+
+            if text_id:
+                nodes[text_id]["title"] = new_title
+                nodes_file.seek(0)
+                json.dump(nodes, nodes_file, indent=2)
+                nodes_file.truncate()
+                return jsonify({'message': 'Text edited successfully'}), 200
+            else:
                 return jsonify({'message': 'Text not found'}), 404
-            file.seek(0)
-            file.truncate()
-            json.dump(nodes, file, indent=2)
-        return jsonify({'message': 'Text edited successfully'}), 200
+
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
