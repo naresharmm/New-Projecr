@@ -1,15 +1,14 @@
-/* Reset some default styles */
+
 body, h1 {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
 }
 
-/* Gradient background and centering text */
 body {
-    background: linear-gradient(to right, #c0e7fa, #2ebf91); /* Adjust gradient colors as needed */
+    background: linear-gradient(to right, #c0e7fa, #2ebf91); 
     text-align: center;
-    height: 40%; /* Full viewport height */
+    height: 40%; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,10 +16,9 @@ body {
 
 h2 {
     color: #333;
-    margin-bottom: 20px; /* Add some spacing under the h1 */
+    margin-bottom: 20px; 
 }
 
-/* Styling buttons and links */
 .regBtn, .button1, .button2, .container a[type="button"], .container button[type="button"] {
     border: none;
     border-radius: 20px; 
@@ -36,19 +34,18 @@ h2 {
     background-color: #2ebf91; 
 }
 
-/* Hover effects */
 .regBtn:hover, .button1:hover, .button2:hover, .container a[type="button"]:hover, .container button[type="button"]:hover {
     background-color: #555; 
     color: white;
 }
 
-/* Container styling */
+
 .container {
     background-color: white;
     padding: 40px;
     border-radius: 14px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-    width: 330px; /* Fixed width for the container */
+    width: 330px; 
     margin-top:20px;
 }
 
@@ -77,10 +74,10 @@ h2 {
     width: calc(100% - 30px); /* Adjust width to account for padding */
 }
 
-/* Button container styling */
+
 .button_container {
     margin-top: 20px;
-    text-align: center; /* Center the button container */
+    text-align: center;
 }
 
 

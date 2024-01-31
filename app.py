@@ -19,38 +19,62 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
 key = Fernet.generate_key()
-cipher_suite = Fernet(key)
-	
+cipher_suite = Fernet(b'DHML65d-nY3iZL1vsWkrmzf2kSfoHQ9Fnv6IWlyIPzQ=')
+
 def login_required(view):
+    """
+    Decorator to check if the user is logged in before accessing a view.
+
+    Args:
+        view (function): The view function to be wrapped.
+
+    Returns:
+        function: The wrapped view function.
+    """
     @wraps(view)
     def wrapped_view(**kwargs):
-        """Check if the user is logged in before accessing a view."""
         if not session.get("phone_number", None):
             return redirect(url_for('home'))
-
         return view(**kwargs)
     return wrapped_view
 
 @app.route('/')
 def home():
-    """Render the home page."""
+    """
+    Render the home page.
+
+    Returns:
+        str: The rendered HTML content of the home page.
+    """
     countries: list[str] = get_countries()
     return render_template('home.html', countries=countries)
 
 @app.route('/profile')
 @login_required
 def profile():
-    """Render the user's profile page."""
+    """
+    Render the user's profile page.
+    """
     return render_template('profile.html')
 
 @app.route('/register', methods=['GET'])
 def register_form():
-    """Render the registration form."""
+    """
+    Render the registration form.
+
+    Returns:
+        str: The rendered HTML content of the registration form.
+    """
     return render_template('registration.html', countries=get_countries())
 
 @app.route('/register', methods=['POST'])
 def register():
-    """Register a new user."""
+    """
+    Register a new user.
+
+    Returns:
+        str: A redirection to the user's profile page if registration is successful, otherwise an error message.
+    """
     password_form = request.form.get("password")
     encrypted_password = cipher_suite.encrypt(password_form.encode()).decode()
     if UserValidator.validate_registration(request.form):
@@ -72,38 +96,51 @@ def register():
 
 @app.route('/login', methods=['GET'])
 def login_form():
-    """Render the login form."""
+    """
+    Render the login form.
+
+    Returns:
+        str: The rendered HTML content of the login form.
+    """
     return render_template('login.html')
 
 @app.route('/login', methods=['POST'])
 def login():
-    """Log in an existing user."""
+    """
+    Log in an existing user.
+
+    Returns:
+        str: A redirection to the user's profile page if login is successful, otherwise an error message.
+    """
     phone_number: str = request.form.get('phone_number')
     password: str = request.form.get('password')
-
     with open('data/users.json', 'r', encoding='utf-8') as file:
         users: dict = json.load(file)
-    if phone_number in users and users[phone_number]["password"] == password: 
-        #make users[phone_number]['password']decoded/decrypted == pasword
+
+    dec_password = cipher_suite.decrypt(users[phone_number]["password"]).decode()
+    if phone_number in users and dec_password == password:
         session["phone_number"] = phone_number
-        return redirect(url_for('profile'))  
+        return redirect(url_for('profile'))
     else:
         return "Phone number or password is incorrect"
 
 @app.route('/save_text', methods=['GET', 'POST'])
 def save_text():
-    """Save a text provided by the user."""
+    """
+    Save a text provided by the user.
+
+    Returns:
+        str: A JSON response indicating whether the text was saved successfully or an error message.
+    """
     with open('data/node.json', 'r+', encoding='utf-8') as file:
         nodes: dict = json.load(file)
         file.seek(0)
-
         user_phone: str = session.get("phone_number")
         request_data: dict = json.loads(request.get_data().decode("utf-8"))
         text: str = request_data.get("text")
         title: str = request_data.get("title")
         if text and title:
             text_uuid: str = str(uuid.uuid4())
-
             nodes[text_uuid] = {
                 "title": title,
                 "text": text,
@@ -111,27 +148,26 @@ def save_text():
                 "user_phone": user_phone
             }
             json.dump(nodes, file, indent=2)
-
     with open('data/users.json', 'r+', encoding='utf-8') as file:
         users: dict = json.load(file)
-
         file.seek(0)
-
         users[user_phone]['node_ids'].append(text_uuid)
         json.dump(users, file, indent=2)
-    return jsonify(
-        {'message': 'Text saved successfully', 'uuid': text_uuid}
-    ), 200
+    return jsonify({'message': 'Text saved successfully', 'uuid': text_uuid}), 200
 
 @app.route('/get_saved_texts')
 def get_saved_texts():
-    """Return the saved texts for  current user."""
+    """
+    Return the saved texts for the current user.
+
+    Returns:
+        str: A JSON response containing the saved texts for the current user or an error message.
+    """
     try:
         with open('data/node.json', 'r', encoding='utf-8') as file:
             nodes: dict = json.load(file)
         show_list: list[str] = [
-            nodes[key]["title"] for key in nodes if nodes[key]["user_phone"] \
-                    == session.get("phone_number")
+            nodes[key]["title"] for key in nodes if nodes[key]["user_phone"] == session.get("phone_number")
         ]
         return jsonify({'texts': show_list}), 200
     except Exception as e:
@@ -139,22 +175,23 @@ def get_saved_texts():
 
 @app.route('/profile/delete_text', methods=['POST'])
 def delete_text():
-    """Delete a text by its title """
-    data: dict = request.get_json()
-    print("Received data:", data)  
-    title: str = data.get('title')  
+    """
+    Delete a text by its title.
 
+    Returns:
+        str: A JSON response indicating whether the text was deleted successfully or an error message.
+    """
+    data: dict = request.get_json()
+    print("Received data:", data)
+    title: str = data.get('title')
     if not title:
         return jsonify({'message': 'No title provided'}), 400
-
     current_user_phone: str = session.get("phone_number")
     if not current_user_phone:
         return jsonify({'message': 'User not authenticated'}), 401
-
     try:
-        with open('data/node.json', 'r+') as file:
+        with open('data/node.json', 'r+', encoding='utf-8') as file:
             nodes: dict = json.load(file)
-
             text_id: str = None
             for node_id, node in nodes.items():
                 if node.get("user_phone") == current_user_phone and node.get("title") == title:
@@ -162,12 +199,10 @@ def delete_text():
                     break
             if text_id:
                 del nodes[text_id]
-
                 file.seek(0)
                 file.truncate()
                 json.dump(nodes, file, indent=2)
-
-        with open('data/users.json', 'r+') as file2:
+        with open('data/users.json', 'r+', encoding='utf-8') as file2:
             users: dict = json.load(file2)
             if current_user_phone in users:
                 users[current_user_phone]["node_ids"].remove(text_id)
@@ -180,23 +215,24 @@ def delete_text():
 
 @app.route('/profile/edit_text', methods=['POST'])
 def edit_text():
-    """Edit the title of a text for the current user."""
+    """
+    Edit the title of a text for the current user.
+
+    Returns:
+        str: A JSON response indicating whether the text title was edited successfully or an error message.
+    """
     data: dict = request.get_json()
-    print("Received data:", data)  
+    print("Received data:", data)
     old_title: str = data.get('old_title')
     new_title: str = data.get('new_title')
-
     if not old_title or not new_title:
         return jsonify({'message': 'Title missing'}), 400
-
     current_user_phone: str = session.get("phone_number")
     if not current_user_phone:
         return jsonify({'message': 'User not authenticated'}), 401
-
     try:
-        with open('data/node.json', 'r+') as file:
+        with open('data/node.json', 'r+', encoding='utf-8') as file:
             nodes: dict = json.load(file)
-
             text_id: str = None
             for node_id, node in nodes.items():
                 if node.get("user_phone") == current_user_phone and node.get("title") == old_title:
