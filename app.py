@@ -38,6 +38,7 @@ def login_required(view):
         return view(**kwargs)
     return wrapped_view
 
+
 @app.route('/')
 def home():
     """
@@ -47,8 +48,6 @@ def home():
         str: The rendered HTML content of the home page.
     """
     countries: list[str] = get_countries()
-    
-    # Check if the user is logged in
     if session.get("phone_number"):
         login_status = "Logged in as: " + session["phone_number"]
     else:
@@ -194,7 +193,7 @@ def get_saved_texts():
 
     with open('data/node.json', 'r', encoding='utf-8') as nodes_file:
         nodes = json.load(nodes_file)
-        user_texts = [nodes[node_id]["text"] for node_id in user_node_ids if node_id in nodes]  # Changed from text["title"] to text["text"]
+        user_texts = [nodes[node_id]["text"] for node_id in user_node_ids if node_id in nodes]  
 
     return jsonify({'texts': user_texts}), 200
 
