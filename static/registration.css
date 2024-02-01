@@ -6,7 +6,7 @@ body, h1 {
 }
 
 body {
-    background: linear-gradient(to right, #c0e7fa, #2ebf91); 
+    background: linear-gradient(to right, #daf3ff, #2ebf91); 
     text-align: center;
     height: 40%; 
     display: flex;
@@ -66,12 +66,12 @@ h2 {
 .container input[type="text"], .container input[type="password"], .container select, .container input[type="email"], .container input[type="tel"] {
     padding: 15px;
     margin-bottom: 20px; /* Increase margin for better spacing */
-    border-radius: 20px; /* More rounded borders for input fields */
+    border-radius: 20px; 
     border: 1px solid #ccc;
     font-size: 16px;
-    background-color: #f9f9f9; /* Slightly off-white background for input fields */
+    background-color: #f9f9f9; 
     display: block;
-    width: calc(100% - 30px); /* Adjust width to account for padding */
+    width: calc(100% - 30px); 
 }
 
 

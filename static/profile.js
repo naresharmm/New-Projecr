@@ -81,9 +81,8 @@ class FormHandler {
         });
     }
     
-}
-function deleteNodes(title) {
-    const confirmation = confirm(`Are you sure you want to delete the text with title: ${title}?`);
+}function deleteNodes(textContent) {
+    const confirmation = confirm(`Are you sure you want to delete this text?`);
     if (!confirmation) {
         return;
     }
@@ -92,7 +91,7 @@ function deleteNodes(title) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title: title }), 
+        body: JSON.stringify({ text: textContent }),
     })
     .then(response => {
         if (!response.ok) {
@@ -102,22 +101,21 @@ function deleteNodes(title) {
     })
     .then(data => {
         alert(data.message || 'Text deleted successfully.');
-         
     })
     .catch(error => {
         console.error(error); 
         alert('An error occurred while deleting the text: ' + error.message);
     });
 }
-function editNode(oldTitle) {
-    const newTitle = prompt(`Enter the new title for the text: ${oldTitle}`);
-    if (newTitle) {
+function editNode(oldText) {
+    const newText = prompt(`Enter the new text:`);
+    if (newText) {
         fetch('/profile/edit_text', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ old_title: oldTitle, new_title: newTitle }),
+            body: JSON.stringify({ old_text: oldText, new_text: newText }),
         })
         .then(response => {
             if (!response.ok) {
@@ -127,7 +125,6 @@ function editNode(oldTitle) {
         })
         .then(data => {
             alert(data.message || 'Text edited successfully.');
-            
         })
         .catch(error => {
             console.error(error);

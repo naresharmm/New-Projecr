@@ -194,9 +194,10 @@ def get_saved_texts():
 
     with open('data/node.json', 'r', encoding='utf-8') as nodes_file:
         nodes = json.load(nodes_file)
-        user_texts = [nodes[node_id] for node_id in user_node_ids if node_id in nodes]
+        user_texts = [nodes[node_id]["text"] for node_id in user_node_ids if node_id in nodes]  # Changed from text["title"] to text["text"]
 
-    return jsonify({'texts': [text["title"] for text in user_texts]}), 200
+    return jsonify({'texts': user_texts}), 200
+
 
 
 
@@ -209,9 +210,9 @@ def delete_text():
         str: A JSON response indicating whether the text was deleted successfully or an error message.
     """
     data: dict = request.get_json()
-    title: str = data.get('title')
-    if not title:
-        return jsonify({'message': 'No title provided'}), 400
+    text_to_delete: str = data.get('text')
+    if not text_to_delete:
+        return jsonify({'message': 'No text provided'}), 400
 
     current_user_phone: str = session.get("phone_number")
     if not current_user_phone:
@@ -221,25 +222,27 @@ def delete_text():
         with open('data/users.json', 'r', encoding='utf-8') as users_file:
             users = json.load(users_file)
             user_node_ids = users[current_user_phone]["node_ids"]
+
         with open('data/node.json', 'r', encoding='utf-8') as nodes_file:
             nodes = json.load(nodes_file)
-            text_id = next((nid for nid in user_node_ids if nodes[nid]["title"] == title), None)
+            text_id = next((nid for nid, node in nodes.items() if node["text"] == text_to_delete), None)
 
-        if text_id:
-            # Delete the text and update files
-            del nodes[text_id]
-            user_node_ids.remove(text_id)
-            with open('data/node.json', 'w', encoding='utf-8') as nodes_file:
-                json.dump(nodes, nodes_file, indent=2)
-            with open('data/users.json', 'w', encoding='utf-8') as users_file:
-                json.dump(users, users_file, indent=2)
+            if text_id:
+                del nodes[text_id]
+                user_node_ids.remove(text_id)
 
-            return jsonify({'message': 'Text deleted successfully'}), 200
-        else:
-            return jsonify({'message': 'Text not found'}), 404
+                with open('data/node.json', 'w', encoding='utf-8') as nodes_file:
+                    json.dump(nodes, nodes_file, indent=2)
+                with open('data/users.json', 'w', encoding='utf-8') as users_file:
+                    json.dump(users, users_file, indent=2)
+
+                return jsonify({'message': 'Text deleted successfully'}), 200
+            else:
+                return jsonify({'message': 'Text not found'}), 404
 
     except Exception as e:
         return jsonify({'message': str(e)}), 500
+
 
 
 @app.route('/profile/edit_text', methods=['POST'])
@@ -251,10 +254,10 @@ def edit_text():
         str: A JSON response indicating whether the text title was edited successfully or an error message.
     """
     data: dict = request.get_json()
-    old_title: str = data.get('old_title')
-    new_title: str = data.get('new_title')
-    if not old_title or not new_title:
-        return jsonify({'message': 'Title missing'}), 400
+    old_text: str = data.get('old_text')
+    new_text: str = data.get('new_text')
+    if not old_text or not new_text:
+        return jsonify({'message': 'Text missing'}), 400
 
     current_user_phone: str = session.get("phone_number")
     if not current_user_phone:
@@ -267,10 +270,10 @@ def edit_text():
 
         with open('data/node.json', 'r+', encoding='utf-8') as nodes_file:
             nodes = json.load(nodes_file)
-            text_id = next((nid for nid in user_node_ids if nodes[nid]["title"] == old_title), None)
+            text_id = next((nid for nid in user_node_ids if nodes[nid]["text"] == old_text), None)
 
             if text_id:
-                nodes[text_id]["title"] = new_title
+                nodes[text_id]["text"] = new_text
                 nodes_file.seek(0)
                 json.dump(nodes, nodes_file, indent=2)
                 nodes_file.truncate()
