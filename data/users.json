@@ -12,5 +12,13 @@
     "email": "alall@lala.com",
     "password": "gAAAAABlwKiXaaId9ZFGQW_kFg3FbtY20ErxLuixsZVZBk4nNS_3dAJRA1nGlyZ9KoymjwVdDHQ9fs-oWYJqTqTW5QwE-T5mQQ==",
     "node_ids": []
+  },
+  "+37494877454": {
+    "email": "lildav@mail.ru",
+    "password": "gAAAAABlwTxi_O4JNaQQaVFaHC1vEfpb1NIAmcD1kg4_IpLFqiGV2v7aAWPzNjl0Nc1NP2ac2ycJN9mTnftzqyECtu_fCIlFgA==",
+    "node_ids": [
+      "ef64608d-17dd-490e-85bb-48d1ea280843",
+      "c3ac82f6-3911-4a1a-afe5-8428007b9774"
+    ]
   }
 }

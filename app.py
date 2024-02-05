@@ -7,7 +7,6 @@ from flask import (
     session
 )
 from countries import get_countries
-from delete_blueprint import delete_blueprint
 from edit_blueprint import edit_blueprint 
 from login_register import login_register
 from save_get import save_get
@@ -15,7 +14,6 @@ from save_get import save_get
 app = Flask(__name__) 
 app.register_blueprint(login_register)
 app.register_blueprint(edit_blueprint)
-app.register_blueprint(delete_blueprint)
 app.register_blueprint(save_get)
 app.secret_key = 'your_secret_key_here'
 
