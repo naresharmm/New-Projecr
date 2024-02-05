@@ -21,4 +21,26 @@
       "c3ac82f6-3911-4a1a-afe5-8428007b9774"
     ]
   }
+}{
+  "+37494875465": {
+    "email": "user1@gmail.commm",
+    "password": "gAAAAABlvKrXvIgS_s5yqWtyzXL7sXfohmaO9xfSn3Er8_UyR9PVvgR96MmY3JfyozKipu2-JLB4WJlfgJfmntMPDp6nbGYeKA==",
+    "node_ids": [
+      "afd528cd-8b3e-4437-a972-3566320e52e6",
+      "612b16da-6dd2-484a-9a06-7b00a9aa1a53",
+      "07b1cb13-94c0-4b96-b629-64380406ecc2"
+    ]
+  },
+  "+37498785481": {
+    "email": "alall@lala.com",
+    "password": "gAAAAABlwKiXaaId9ZFGQW_kFg3FbtY20ErxLuixsZVZBk4nNS_3dAJRA1nGlyZ9KoymjwVdDHQ9fs-oWYJqTqTW5QwE-T5mQQ==",
+    "node_ids": []
+  },
+  "+37494877454": {
+    "email": "lildav@mail.ru",
+    "password": "gAAAAABlwTxi_O4JNaQQaVFaHC1vEfpb1NIAmcD1kg4_IpLFqiGV2v7aAWPzNjl0Nc1NP2ac2ycJN9mTnftzqyECtu_fCIlFgA==",
+    "node_ids": [
+      "ef64608d-17dd-490e-85bb-48d1ea280843"
+    ]
+  }
 }
