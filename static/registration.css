@@ -49,7 +49,6 @@ h2 {
     margin-top:20px;
 }
 
-/* Form styling */
 .container form {
     margin-top: 20px;
 }
@@ -59,13 +58,13 @@ h2 {
     margin-bottom: 5px;
     color: #333;
     font-weight: bold;
-    text-align: left; /* Align text to the left */
+    text-align: left; 
 }
 
-/* Input fields styling */
+
 .container input[type="text"], .container input[type="password"], .container select, .container input[type="email"], .container input[type="tel"] {
     padding: 15px;
-    margin-bottom: 20px; /* Increase margin for better spacing */
+    margin-bottom: 20px; 
     border-radius: 20px; 
     border: 1px solid #ccc;
     font-size: 16px;
