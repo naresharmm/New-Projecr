@@ -81,7 +81,8 @@ class FormHandler {
         });
     }
     
-}function deleteNodes(textContent) {
+}
+function deleteNodes(textContent) {
     const confirmation = confirm(`Are you sure you want to delete this text?`);
     if (!confirmation) {
         return;

@@ -11,7 +11,8 @@ def edit_text():
     """
     Edit the title of a text for the current user.
     Returns:
-        str: A JSON response indicating whether the text title was edited successfully or an error message.
+        str: A JSON response indicating whether 
+        the text title was edited successfully or an error message.
     """
     data = request.get_json()
     new_text = data.get('new_text')
@@ -30,7 +31,6 @@ def edit_text():
             users = json.load(users_file)
             user_node_ids = users.get(current_user_phone, {}).get("node_ids", [])
             nodes = json.load(nodes_file)
-            
             text_id = next((nid for nid in user_node_ids
              if nodes.get(nid, {}).get("text") == data.get('old_text')), None)
 

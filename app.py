@@ -1,4 +1,3 @@
-from functools import wraps
 from flask import (
     Flask,
     render_template,
@@ -6,11 +5,11 @@ from flask import (
     url_for,
     session
 )
+from functools import wraps
 from countries import get_countries
 from edit_blueprint import edit_blueprint 
 from login_register import login_register
 from save_get import save_get
-
 app = Flask(__name__) 
 app.register_blueprint(login_register)
 app.register_blueprint(edit_blueprint)
@@ -48,8 +47,8 @@ def home():
         login_status = "Logged in as: " + session["phone_number"]
     else:
         login_status = "Not logged in"
-    
-    return render_template('home.html', countries=countries, login_status=login_status)
+    print(login_status)
+    return render_template('home.html', countries = countries, login_status = login_status)
 
 @app.route('/profile')
 @login_required
