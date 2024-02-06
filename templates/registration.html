@@ -10,11 +10,15 @@
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br><br>
             <label for="email">Email:</label>
-            <input type="email" pattern="[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}" title="Email should be up to 10 characters @ up to 10 characters . up to 10 characters" name="email" id="email" required>
+            <input type="email" 
+            pattern="[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}" 
+            title="Email should be up to 10 characters @ up to 10 characters. up to 10 characters"
+             name="email" id="email" required>
     
     
             <label for="phone_number">Phone number:</label>
-            <input type="tel" id="phone_number" name="phone_number" pattern="^\+374\d{8}$" 
+            <input type="tel" id="phone_number"
+             name="phone_number" pattern="^\+374\d{8}$" 
             title="Phone number should be in the format: +374XXXXXXXX"
             required class="phonenumber"><br><br>
     
@@ -27,7 +31,8 @@
     
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" 
-            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" title="Your password must contain at
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" 
+            title="Your password must contain at
              least 8 characters, including at least one uppercase letter, 
              one lowercase letter, and one number."
              required><br><br>
@@ -41,8 +46,6 @@
   
         
     </div>
-
-
     </body>
 </html>
        

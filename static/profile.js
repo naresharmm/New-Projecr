@@ -133,5 +133,30 @@ function editNode(oldText) {
         });
     }
 }
+
+// function deleteNodes(nid) {
+//     const confirmation = confirm(`Are you sure you want to delete this text?`);
+//     if (!confirmation) {
+//         return;
+//     }
+//     fetch(`/profile/delete_text/${nid}`, { // Pass nid as part of the URL
+//         method: 'DELETE', // Use DELETE method for the route
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         alert(data.message || 'Text deleted successfully.');
+//     })
+//     .catch(error => {
+//         console.error(error); 
+//         alert('An error occurred while deleting the text: ' + error.message);
+//     });
+// }
+
 let formHandler1 = new FormHandler('myModal', () => alert('Text added!'), '');
 let formHandler2 = new FormHandler('myModal2', () => alert('Text edited or deleted!'), '');
+
