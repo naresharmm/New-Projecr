@@ -1,7 +1,4 @@
 from flask import Flask
-
-from functools import wraps
-from countries import get_countries
 from text_manager import text_manager 
 from UserAuthBlueprint import UserAuthBlueprint
 from data_storage import data_storage

@@ -1,7 +1,8 @@
 import json
 import uuid
 from functools import wraps
-from datetime import datetime  
+from datetime import datetime
+
 from flask import (
     Blueprint,
     jsonify,
@@ -49,7 +50,6 @@ class DataStorageRoutes:
             login_status = "Logged in as: " + session["phone_number"]
         else:
             login_status = "Not logged in"
-        print(login_status)
         return render_template('home.html', countries=countries, login_status=login_status)
 
     @staticmethod

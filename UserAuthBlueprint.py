@@ -7,7 +7,6 @@ from flask import (
     redirect,
     url_for,
 )
-
 from cryptography.fernet import Fernet
 from user import UserValidator
 from countries import get_countries
