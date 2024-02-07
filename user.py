@@ -1,5 +1,7 @@
 # user.py
 import re
+import json 
+from cryptography.fernet import Fernet
 
 class UserValidator:
     @staticmethod
@@ -80,3 +82,5 @@ class UserValidator:
             r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$",
             password
         )
+    
+    
