@@ -11,10 +11,7 @@
     "email": "lildav@shirakatsy.am",
     "password": "gAAAAABlxq8DCFnmuU5sq9yccVO0kU01iNITsY_iJDBOq6vVTASjaFhxQRdvL2zJLYEbOxb1OI6o9rB71UJumdbK5zZTK8lSBw==",
     "node_ids": [
-      "1fa3b78f-b8ad-4966-af6b-b5c89a150dee",
-      "aeb79b13-da21-45de-89c2-a0e2bb19b2a7",
-      "18ba0934-f12f-40b0-845c-e6a5402e9e4f",
-      "91acbe8d-906b-47a3-9201-fa7a9680ec37"
+      "1e2582bf-941f-40bf-a9e1-47be0962cc7b"
     ]
   },
   "+37444887545": {
@@ -22,6 +19,13 @@
     "password": "gAAAAABlyqZL8xlkAnlfqcPmcg3ZyERA2CzB1oz07irPaj5NebGH1dA4hW4thrxcwCjTzFYN4X_cza-kyZmDrGeO4Epr2zw3ew==",
     "node_ids": [
       "cf5c4b10-5f21-4582-99fc-17cedf85a2e1"
+    ]
+  },
+  "+37455477482": {
+    "email": "haha2@gmail.com",
+    "password": "gAAAAABlyq3pVnFz-72BLaqh4aSSJITs8uNl7i8PDnBb2GLmMV0PaZz3gpASw9BcmHkPadLszpK4STUK3lKuA_bczFcI9ftUsw==",
+    "node_ids": [
+      "96c2ca3a-56e9-4588-b410-9646912ae425"
     ]
   }
 }
