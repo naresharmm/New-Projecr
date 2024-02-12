@@ -36,7 +36,24 @@ def home():
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html')
+    """
+    Render the user's profile page.
+    """
+    user_phone = session.get("phone_number")
+    nodes = {}
+
+    if user_phone:
+        with open('data/users.json', 'r', encoding='utf-8') as users_file:
+            users = json.load(users_file)
+            user_node_ids = users.get(user_phone, {}).get('node_ids', [])
+        with open('data/node.json', 'r', encoding='utf-8') as nodes_file:
+            all_nodes = json.load(nodes_file)
+
+        nodes = {node_id: all_nodes.get(node_id) for node_id in user_node_ids if node_id in all_nodes}
+
+    return render_template('profile.html', nodes=nodes)
+
+   
 
 @app.route('/register', methods=['GET'])
 def register_form():

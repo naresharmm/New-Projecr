@@ -2,6 +2,7 @@ import json
 import uuid
 from datetime import datetime
 
+
 class NodesController:
     @staticmethod
     def save_text(request_data, session):
@@ -14,7 +15,6 @@ class NodesController:
         user_phone = session.get("phone_number")
         if not user_phone:
             return {'message': 'User not authenticated'}, 401
-
         text_uuid = str(uuid.uuid4())
 
         with open('data/node.json', 'r', encoding='utf-8') as file:
@@ -49,3 +49,4 @@ class NodesController:
             user_texts = [nodes[node_id]["text"] for node_id in user_node_ids if node_id in nodes]  
 
         return {'texts': user_texts}, 200
+    

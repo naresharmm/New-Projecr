@@ -37,52 +37,12 @@ class FormHandler {
             alert(data.message || 'Text saved successfully.');
             this.submitCallback && this.submitCallback();
             this.closeForm();
+            window.location.reload()
         })
         .catch(error => alert('An error occurred. Please try again.'));
     }
-    fetchAndDisplaySavedTexts() {
-        fetch('/get_saved_texts')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const container = document.getElementById('tableContainer');
-            container.innerHTML = ''; 
-            data.texts.forEach(text => {
-                const table = document.createElement('table');
-                table.className = 'text-table';
-            
-                const row = table.insertRow();
-                const textCell = row.insertCell(0);
-                textCell.textContent = text;
-            
-                const editButton = document.createElement('button');
-                editButton.innerHTML = '<i class="fas fa-pencil-alt"></i> ';
-                editButton.classList.add('edit-button'); 
-                editButton.onclick = function() { editNode(text);location.reload(); };
-                row.insertCell(1).appendChild(editButton);
-            
-                const deleteButton = document.createElement('button');
-                deleteButton.innerHTML = '<i class="fas fa-times"></i>';
-                deleteButton.classList.add('delete-button'); 
-                deleteButton.onclick = function() { deleteNodes(text);location.reload(); };
-                row.insertCell(2).appendChild(deleteButton);
-                            
-                container.appendChild(table);
-                
-            });
-            
-        })
-        .catch(error => {
-            alert('An error occurred while fetching saved texts: ' + error.message);
-        });
-    }
-    
 }
-function deleteNodes(textContent) {
+function deleteNode(node_id) {
     const confirmation = confirm(`Are you sure you want to delete this text?`);
     if (!confirmation) {
         return;
@@ -92,12 +52,13 @@ function deleteNodes(textContent) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: textContent }),
+        body: JSON.stringify({ node_id: node_id }),
     })
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
+        document.getElementById(node_id).parentNode.remove(); // Remove the row from the HTML table upon successful deletion
         return response.json();
     })
     .then(data => {
@@ -108,55 +69,35 @@ function deleteNodes(textContent) {
         alert('An error occurred while deleting the text: ' + error.message);
     });
 }
-function editNode(oldText) {
+
+function editNode(node_id) {
     const newText = prompt(`Enter the new text:`);
-    if (newText) {
-        fetch('/profile/edit_text', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ old_text: oldText, new_text: newText }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert(data.message || 'Text edited successfully.');
-        })
-        .catch(error => {
-            console.error(error);
-            alert('An error occurred while editing the text: ' + error.message);
-        });
+    if (!newText) {
+        return; // If user cancels or enters empty string, do nothing
     }
+    fetch('/profile/edit_text', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ node_id: node_id, new_text: newText }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        document.getElementById(`${node_id}-text`).textContent = newText; // Update the text in the HTML table upon successful edit
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message || 'Text edited successfully.');
+    })
+    .catch(error => {
+        console.error(error);
+        alert('An error occurred while editing the text: ' + error.message);
+    });
 }
 
-// function deleteNodes(nid) {
-//     const confirmation = confirm(`Are you sure you want to delete this text?`);
-//     if (!confirmation) {
-//         return;
-//     }
-//     fetch(`/profile/delete_text/${nid}`, { // Pass nid as part of the URL
-//         method: 'DELETE', // Use DELETE method for the route
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error('Network response was not ok');
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         alert(data.message || 'Text deleted successfully.');
-//     })
-//     .catch(error => {
-//         console.error(error); 
-//         alert('An error occurred while deleting the text: ' + error.message);
-//     });
-// }
 
 let formHandler1 = new FormHandler('myModal', () => alert('Text added!'), '');
 let formHandler2 = new FormHandler('myModal2', () => alert('Text edited or deleted!'), '');
-

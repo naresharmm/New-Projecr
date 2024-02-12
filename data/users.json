@@ -1,32 +1,27 @@
 {
-  "+37498785487": {
-    "email": "nana@mail.ru",
-    "password": "gAAAAABlwgsVeLcM7_jy9xpNAJdLsyXqaEcp1KY7YdydtwkyDCJsS_44IHTRIIYWRwd6te1eROIXZAV507CJHykcDoOkbU3x0w==",
-    "node_ids": []
-  },
-  "+37455441424": {
-    "email": "aarmen77@gmail.com",
-    "password": "gAAAAABlwg1ckx1bE5oJLJnJmVPg-HVk-o5k5vvJcLd8hAswXvZwyCKUiDKoz8Hs8h5d_RKt6HGYFxP3q7xw0Za3Tusn77Cj5Q==",
+  "+37498459840": {
+    "email": "eded@mail.ru",
+    "password": "gAAAAABlxq2ui0fwubQS4in9Jo1mb37zfduYrn9rrjrFmjYW3TLNwa6_KdtmGvYjdZ-FS9e-vNic12k-jHpv3V6eW0OVXEaW4g==",
     "node_ids": [
-      "d7f66198-1b4a-4c55-a84f-9102e3d2b56f",
-      "72a876cd-aead-4080-8b5c-50290bd06c63",
-      "966beffd-2c2f-47c0-a672-88e2b9fab53b",
-      "dfea2ede-c884-48d0-8035-4ec0a54e3431"
+      "59d32d9a-ba1a-47f4-890c-711c227b0860",
+      "1f27b41a-a453-4103-9cdb-50e60eaef530"
     ]
   },
-  "+37488557447": {
-    "email": "nanan@jajcom.com",
-    "password": "gAAAAABlwjGdKXecNe-oxWiLy82Fr8G_nqVGH4CoYJ6KuSrjcx5ZhQDpwDYOUaDKGqRIq-Zs2RGzik2lfp2cPK4ojqhF0wxmnA==",
-    "node_ids": []
+  "+37477554772": {
+    "email": "lildav@shirakatsy.am",
+    "password": "gAAAAABlxq8DCFnmuU5sq9yccVO0kU01iNITsY_iJDBOq6vVTASjaFhxQRdvL2zJLYEbOxb1OI6o9rB71UJumdbK5zZTK8lSBw==",
+    "node_ids": [
+      "1fa3b78f-b8ad-4966-af6b-b5c89a150dee",
+      "aeb79b13-da21-45de-89c2-a0e2bb19b2a7",
+      "18ba0934-f12f-40b0-845c-e6a5402e9e4f",
+      "91acbe8d-906b-47a3-9201-fa7a9680ec37"
+    ]
   },
-  "+37488557445": {
-    "email": "nanan@jajcom.com",
-    "password": "gAAAAABlwjMdfaj12Lhc3rPIWNHqf4tLXEgPB7V2GXbkNjU6FGx2rTE_5da_J1LnMkGi2Xb_F5rsnhKND8_WTxAF5PXzLcpSKw==",
-    "node_ids": []
-  },
-  "+37494848775": {
-    "email": "lildav@ahah.com",
-    "password": "gAAAAABlwmPXok4lgNNkzAarGUmXtRen2H8JomFmaQdekvPyXvZdcH1mjlLU1SRjHxI_O90GrxgNi-AFmGbseKqp-1bBfpzu0Q==",
-    "node_ids": []
+  "+37444887545": {
+    "email": "okok@k.ru",
+    "password": "gAAAAABlyqZL8xlkAnlfqcPmcg3ZyERA2CzB1oz07irPaj5NebGH1dA4hW4thrxcwCjTzFYN4X_cza-kyZmDrGeO4Epr2zw3ew==",
+    "node_ids": [
+      "cf5c4b10-5f21-4582-99fc-17cedf85a2e1"
+    ]
   }
 }

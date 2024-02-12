@@ -8,28 +8,41 @@
     <link rel="stylesheet" href="/static/profile.css">
     <link rel="stylesheet"
      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
     <link rel="stylesheet"
      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" 
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="/static/profile.js"></script>
+    
+    <style>
+        /* Additional CSS for table formatting */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 
 <body>
     <header>
-      
         <i class="fas fa-user"></i>
         <p style="font-family: 'Times New Roman', Times, serif; font-size: 30px;">
             Welcome to your profile!</p>
+        <button id="logout-button" type="button" style="margin-left:90%;background-color:brown;"
+            onclick="window.location.href='/logout'">Log Out</button>
     </header>
-
     <main>
-
         <button id="add-button" type="button" onclick="formHandler1.openForm()">Add</button>
-        <button id="list-button" type="button" onclick="formHandler2.openForm()">
-            <i class="fas fa-th-list"></i> My List
-        </button>
-
         <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="open" onclick="formHandler1.closeForm()">&times;</span>
@@ -39,38 +52,38 @@
                     <input type="text" id="title" name="title" 
                     maxlength="15" value="{{ request.form['title'] }}"
                         placeholder="Title (max 15 chars)"><br><br>
-
                     <label for="text">Your Text:</label>
                     <textarea id="text" name="text" rows="4" required
                         placeholder="Enter your text...">
                         {{ request.form['text'] }}</textarea><br><br>
-
-                    <button type="button"
-                     onclick="formHandler1.submitForm()">Send</button>
-                    
+                    <button type="button" onclick="formHandler1.submitForm()">Send</button>
                 </form>
             </div>
         </div>
-        <button id="logout-button" type="button" 
-        onclick="window.location.href='/logout'">Log Out</button>
-       
-
-
-        <div id="myModal2" class="modal">
-            <div class="modal-content" style="width:50%;height:80%;">
-                <span class="close" onclick="formHandler2.closeForm()">&times;</span>
-                <h2>My Nodes</h2>
-                <div id="tableContainer"></div> 
-            </div>
-        </div>
-       
+        <!-- Table to display texts and titles -->
+        <table id="texts-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Text</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for node_id, node_data in nodes.items() %}
+                <tr>
+                    <td>{{ node_data.title }}</td>
+                    <td>{{ node_data.text }}</td>
+                    <td><button onclick="editNode('{{ node_id }}')"><i class="fas fa-pencil-alt"></i></button></td>
+                    <td><button onclick="deleteNode('{{ node_id }}')"><i class="fas fa-times"></i></button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
     <footer>
         <p>Contact: your.email@example.com</p>
-     
     </footer>
 </body>
-
 </html>
-
-
-
