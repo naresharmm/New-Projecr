@@ -38,17 +38,16 @@ class DataController:
             return {'message': str(e)}, 500
 
     @staticmethod
-    def edit_text(request, session):
+    def edit_text(request, session, node_id):  # Include node_id as a parameter
         data = request.get_json()
-        node_id = data.get('node_id')
         new_text = data.get('new_text')
 
-        if not node_id or not new_text:
-            return jsonify({'message': 'new_text not provided'}), 400
+        if not new_text:
+            return {'message': 'New text not provided'}, 400
 
         user_phone = session.get("phone_number")
         if not user_phone:
-            return jsonify({'message': 'User not authenticated'}), 401
+            return {'message': 'User not authenticated'}, 401
 
         try:
             with open('data/users.json', 'r+') as users_file:
@@ -67,9 +66,9 @@ class DataController:
                         json.dump(nodes, nodes_file, indent=2)
                         nodes_file.truncate()
 
-                        return jsonify({'message': 'Text edited successfully'}), 200
+                        return {'message': 'Text edited successfully'}, 200
                     else:
-                        return jsonify({'message': 'Text not found'}), 404
+                        return {'message': 'Text not found'}, 404
 
         except Exception as e:
-            return jsonify({'message': str(e)}), 500
+            return {'message': str(e)}, 500

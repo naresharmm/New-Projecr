@@ -94,12 +94,12 @@ function editNode(node_id) {
     if (!newText) {
         return; 
     }
-    fetch('/profile/edit_text', {
+    fetch(`/profile/edit_text/${node_id}`, {  // Include node_id in the URL
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ node_id: node_id, new_text: newText }),
+        body: JSON.stringify({ new_text: newText }),  // Remove node_id from the body
     })
     .then(response => {
         if (!response.ok) {
@@ -109,28 +109,22 @@ function editNode(node_id) {
     })
     .then(data => {
         if (data.message === 'Text edited successfully') {
-            const textElement =
-             document.querySelector(`tr[data-node-id="${node_id}"] td:nth-child(2)`);//this line doesnt work
-             //textElement is null,i see in console.log
-             console.log(textElement)
+            const textElement = document.querySelector(`tr[data-node-id="${node_id}"] td:nth-child(2)`);
             if (textElement) {
                 textElement.textContent = newText;
                 alert(data.message);
             } else {
-                alert('Sure');
-                // window.location.reload();
+                alert('Row not found');
             }
-        } 
-        else {
-            alert(data.message ||
-         'An error occurred while editing the text.');
+        } else {
+            alert(data.message || 'An error occurred while editing the text.');
         }
     })
     .catch(error => {
         console.error(error);
-        alert
-        ('An error occurred while editing the text: ' + error.message);
+        alert('An error occurred while editing the text: ' + error.message);
     });
+
 }
 let formHandler1 = new FormHandler('myModal', () => alert('Text added!'), '');
 let formHandler2 = new FormHandler('myModal2', () => alert('Text edited or deleted!'), '');

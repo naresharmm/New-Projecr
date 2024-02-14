@@ -112,7 +112,11 @@ def delete_text(node_id):
     return jsonify(response), status_code
 
 
-@app.route('/profile/edit_text', methods=['POST'])
-def edit_text():
-    
-    return data_controller.edit_text(request, session)
+@app.route('/profile/edit_text/<node_id>', methods=['POST'])  
+def edit_text(node_id):
+    try:
+        response, status_code = \
+        DataController.edit_text(request, session, node_id)  
+        return jsonify(response), status_code
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
