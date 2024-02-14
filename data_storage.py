@@ -1,11 +1,14 @@
 import json
-from flask import request,jsonify,session
+from flask import jsonify
 
 class DataController:
-    @staticmethod
-    def delete_text(node_id, session):
+    def __init__(self, session, request):
+        self.session = session
+        self.request = request
+
+    def delete_text(self, node_id):
         try:
-            user_phone = session.get("phone_number")
+            user_phone = self.session.get("phone_number")
             if not user_phone:
                 return {'message': 'User not authenticated'}, 401
             
@@ -37,15 +40,14 @@ class DataController:
         except Exception as e:
             return {'message': str(e)}, 500
 
-    @staticmethod
-    def edit_text(request, session, node_id):  # Include node_id as a parameter
-        data = request.get_json()
+    def edit_text(self, node_id, request):
+        data = self.request.get_json()
         new_text = data.get('new_text')
 
         if not new_text:
             return {'message': 'New text not provided'}, 400
 
-        user_phone = session.get("phone_number")
+        user_phone = self.session.get("phone_number")
         if not user_phone:
             return {'message': 'User not authenticated'}, 401
 

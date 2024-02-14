@@ -6,10 +6,9 @@ from flask import session
 from user import UserValidator
 from data_storage import DataController
 
-
 class UserController:
-    def __init__(self):
-        self.data_controller = DataController()
+    def __init__(self, session, request):
+        self.data_controller = DataController(session, request)
         self.cipher_suite = Fernet(b'DHML65d-nY3iZL1vsWkrmzf2kSfoHQ9Fnv6IWlyIPzQ=')
 
     def register(self, form_data):
