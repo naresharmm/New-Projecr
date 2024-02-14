@@ -1,6 +1,8 @@
 import json
-from flask import session
 from cryptography.fernet import Fernet
+
+from flask import session
+
 from user import UserValidator
 from data_storage import DataController
 

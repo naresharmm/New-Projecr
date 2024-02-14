@@ -46,19 +46,19 @@ class FormHandler {
         .catch(error => alert('An error occurred. Please try again.'));
     }
 }
+
 function deleteNode(node_id) {
-    const confirmation = 
-    confirm(`Are you sure you want to delete this text?`);
+    const confirmation = confirm(`Are you sure you want to delete this text?`);
     if (!confirmation) {
         return;
     }
 
-    fetch('/profile/delete_text', {
+    fetch(`/profile/delete_text/${node_id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ node_id: node_id }),
+            'Accept': 'application/json',
+        }
     })
     .then(response => {
         if (!response.ok) {
@@ -68,25 +68,26 @@ function deleteNode(node_id) {
     })
     .then(data => {
         if (data.message === 'Text deleted successfully') {
-            const textElement =
-             document.querySelector(`[data-node-id="${node_id}"]`);
-            if (textElement) {
-                textElement.parentNode.parentNode.remove(); 
-                alert(data.message);
+            const rowToDelete = document.querySelector(`tr[data-node-id="${node_id}"]`);
+            console.log(node_id)
+            if (rowToDelete) {
+                console.log(rowToDelete)
+                rowToDelete.remove();
+                alert('Row deleted successfully');
             } else {
-                alert('Sure');
-                window.location.reload();
+                console.error('Row not found:', node_id);
             }
         } else {
-            alert(data.message || 
-            'An error occurred while deleting the text.');
+            alert(data.message || 'An error occurred while deleting the text.');
         }
     })
     .catch(error => {
-        console.error(error); 
+        console.error(error);
         alert('An error occurred while deleting the text: ' + error.message);
     });
 }
+
+
 
 function editNode(node_id) {
     const newText = prompt(`Enter the new text:`);
@@ -109,15 +110,18 @@ function editNode(node_id) {
     .then(data => {
         if (data.message === 'Text edited successfully') {
             const textElement =
-             document.querySelector(`tr[data-node-id="${node_id}"] td:nth-child(2)`);
+             document.querySelector(`tr[data-node-id="${node_id}"] td:nth-child(2)`);//this line doesnt work
+             //textElement is null,i see in console.log
+             console.log(textElement)
             if (textElement) {
                 textElement.textContent = newText;
                 alert(data.message);
             } else {
                 alert('Sure');
-                window.location.reload();
+                // window.location.reload();
             }
-        } else {
+        } 
+        else {
             alert(data.message ||
          'An error occurred while editing the text.');
         }

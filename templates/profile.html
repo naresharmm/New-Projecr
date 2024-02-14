@@ -60,7 +60,7 @@
                 </form>
             </div>
         </div>
-        <!-- Table to display texts and titles -->
+        <p style="text-align:center;font-size:40px;font-weight: bold;color:rgb(2, 2, 59);font-style:italic;">My Notes</p>
         <table id="texts-table">
             <thead>
                 <tr>
@@ -72,7 +72,7 @@
             </thead>
             <tbody>
                 {% for node_id, node_data in nodes.items() %}
-                <tr>
+                <tr data-node-id="{{ node_id }}">
                     <td>{{ node_data.title }}</td>
                     <td>{{ node_data.text }}</td>
                     <td><button onclick="editNode('{{ node_id }}')"><i class="fas fa-pencil-alt"></i></button></td>
