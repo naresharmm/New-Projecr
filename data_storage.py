@@ -3,10 +3,33 @@ from flask import jsonify
 
 class DataController:
     def __init__(self, session, request):
+        """
+        Initialize the DataController.
+
+        Parameters
+        ----------
+        session : dict
+            The session object from Flask.
+        request : request
+            The request object from Flask.
+        """
         self.session = session
         self.request = request
 
     def delete_text(self, node_id):
+        """
+        Delete a text node.
+
+        Parameters
+        ----------
+        node_id : str
+            The ID of the text node to delete.
+
+        Returns
+        -------
+        dict
+            A dictionary containing a message about the status of the deletion.
+        """
         try:
             user_phone = self.session.get("phone_number")
             if not user_phone:
@@ -41,6 +64,21 @@ class DataController:
             return {'message': str(e)}, 500
 
     def edit_text(self, node_id, request):
+        """
+        Edit a text node.
+
+        Parameters
+        ----------
+        node_id : str
+            The ID of the text node to edit.
+        request : request
+            The request object from Flask.
+
+        Returns
+        -------
+        dict
+            A dictionary containing a message about the status of the edit.
+        """
         data = self.request.get_json()
         new_text = data.get('new_text')
 

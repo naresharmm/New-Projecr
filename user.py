@@ -1,11 +1,12 @@
 # user.py
 import re
-import json 
+
 from cryptography.fernet import Fernet
 
+import re
+
 class UserValidator:
-    @staticmethod
-    def validate_registration(request_form):
+    def validate_registration(self, request_form: dict) -> bool:
         """Validate a user's registration data based on the given form input.
 
         Parameters:
@@ -23,12 +24,11 @@ class UserValidator:
         country = request_form.get('country')
 
         return all((username, password, email, country)) and \
-            UserValidator.is_valid_phone(phone_number) and \
-            UserValidator.is_valid_email(email) and \
-            UserValidator.is_valid_password(password, password2)
+            self.is_valid_phone(phone_number) and \
+            self.is_valid_email(email) and \
+            self.is_valid_password(password, password2)
 
-    @staticmethod
-    def is_valid_phone(phone_number):
+    def is_valid_phone(self, phone_number: str) -> bool:
         """Validate a phone number based on specific criteria.
 
         Parameters:
@@ -39,8 +39,7 @@ class UserValidator:
         """
         return re.match(r'^\+374\d{8}$', phone_number)
 
-    @staticmethod
-    def is_valid_email(email):
+    def is_valid_email(self, email: str) -> bool:
         """Validate an email address based on specific criteria.
 
         Parameters:
@@ -54,8 +53,7 @@ class UserValidator:
         """
         return re.match(r'^[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}$', email)
 
-    @staticmethod
-    def is_valid_password(password, password2):
+    def is_valid_password(self, password: str, password2: str) -> bool:
         """Validate a password based on specific criteria and check if it matches the confirmed password.
 
         Parameters:
@@ -65,10 +63,9 @@ class UserValidator:
         Returns:
             bool: True if the password meets the required format and matches the confirmation password, False otherwise.
         """
-        return UserValidator.has_valid_format(password) and password == password2
+        return self.has_valid_format(password) and password == password2
 
-    @staticmethod
-    def has_valid_format(password):
+    def has_valid_format(self, password: str) -> bool:
         """Check if a password meets a specified format criteria.
 
         Parameters:
@@ -82,5 +79,3 @@ class UserValidator:
             r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$",
             password
         )
-    
-    
