@@ -73,9 +73,7 @@ function deleteNode(node_id) {
             if (rowToDelete) {
                 console.log(rowToDelete)
                 rowToDelete.remove();
-                alert('Row deleted successfully');
-            } else {
-                console.error('Row not found:', node_id);
+                alert('Text deleted successfully');
             }
         } else {
             alert(data.message || 'An error occurred while deleting the text.');
@@ -94,12 +92,12 @@ function editNode(node_id) {
     if (!newText) {
         return; 
     }
-    fetch(`/profile/edit_text/${node_id}`, {  // Include node_id in the URL
+    fetch(`/profile/edit_text/${node_id}`, {  
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ new_text: newText }),  // Remove node_id from the body
+        body: JSON.stringify({ new_text: newText }),  
     })
     .then(response => {
         if (!response.ok) {

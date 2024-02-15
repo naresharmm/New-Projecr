@@ -1,13 +1,12 @@
 import json
-from flask import jsonify
-
+#type anotationner dnel
 class DataController:
     def __init__(self, session, request):
         """
         Initialize the DataController.
 
         Parameters
-        ----------
+        ---------------
         session : dict
             The session object from Flask.
         request : request
@@ -21,12 +20,12 @@ class DataController:
         Delete a text node.
 
         Parameters
-        ----------
+        --------------
         node_id : str
             The ID of the text node to delete.
 
         Returns
-        -------
+        --------------
         dict
             A dictionary containing a message about the status of the deletion.
         """

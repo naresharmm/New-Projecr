@@ -5,8 +5,14 @@ import json
 
 
 def get_countries():
-    ''' function
-    '''
+    """ 
+    Retrieve a list of countries from a JSON file.
+
+    Returns
+    --------------
+    list
+        A list of country names.
+    """
     path = os.path
     current_dir = path.dirname(__file__)
     data_path = path.join(current_dir, 'data', 'countries.json')

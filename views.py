@@ -29,10 +29,12 @@ def login_required(view):
 
     Redirects to the home page if the user is not logged in.
 
-    Parameters:
+    Parameters
+    ------------------------
         view (function): The view function to be decorated.
 
-    Returns:
+    Returns
+    ------------------------
         function: The wrapped view function.
     """
     @wraps(view)
@@ -59,29 +61,38 @@ def profile() -> str:
     """
     Render the user profile page.
 
-    Returns:
-        str: Rendered HTML content for the user profile page.
+    Returns
+    ------------------------
+        str: 
+        Rendered HTML content for the user profile page.
     """
     user_phone = session.get("phone_number")
-    nodes = {}
     if user_phone:
         with open('data/users.json', 'r', encoding='utf-8') as users_file:
             users = json.load(users_file)
-            user_node_ids = users.get(user_phone, {}).get('node_ids', [])
-        with open('data/node.json', 'r', encoding='utf-8') as nodes_file:
-            all_nodes = json.load(nodes_file)
-
-        nodes = {node_id: all_nodes.get(node_id) for node_id in user_node_ids if node_id in all_nodes}
+        nodes = {node_id: json.load(
+            open('data/node.json', 'r', encoding='utf-8')
+        ).get(node_id) for node_id in users.get(
+            user_phone, {}
+        ).get('node_ids', []) if node_id in json.load(
+            open('data/node.json', 'r', encoding='utf-8')
+        )}
+        #ughel ays kody qanzi vat e,pahel pythoni 80 line-y
+    else:
+        nodes = {}
 
     return render_template('profile.html', nodes=nodes)
+
 
 @app.route('/register', methods=['GET'])
 def register_form() -> str:
     """
     Render the registration form.
 
-    Returns:
-        str: Rendered HTML content for the registration form.
+    Returns
+    ------------------------
+        str
+        Rendered HTML content for the registration form.
     """
     return render_template('registration.html', countries=get_countries())
 
@@ -90,8 +101,10 @@ def register() -> str:
     """
     Handle user registration form submission.
 
-    Returns:
-        str: Either redirects to the profile page upon successful registration or displays an error message.
+    Returns
+    ------------------------
+        str: Either redirects to the profile page 
+        upon successful registration or displays an error message.
     """
     if user_controller.register(request.form):
         return redirect(url_for('profile'))
@@ -103,7 +116,8 @@ def login_form() -> str:
     """
     Render the login form.
 
-    Returns:
+    Returns
+    ------------------------
         str: Rendered HTML content for the login form.
     """
     return render_template('login.html')
@@ -113,7 +127,8 @@ def login() -> str:
     """
     Handle user login form submission.
 
-    Returns:
+    Returns
+    ------------------------
         str: Either redirects to the profile page upon successful login or displays an error message.
     """
     if user_controller.login(request.form.get('phone_number'), request.form.get('password')):
@@ -126,7 +141,8 @@ def logout() -> str:
     """
     Handle user logout.
 
-    Returns:
+    Returns
+    ------------------------
         str: Redirects to the home page after logging out.
     """
     user_controller.logout()
@@ -137,10 +153,15 @@ def save_text() -> str:
     """
     Save text data.
 
-    Returns:
+    Returns
+    ------------------------
         str: JSON response indicating success or failure.
     """
-    response, status_code = NodesController.save_text(json.loads(request.get_data().decode("utf-8")), session)
+    response, status_code = NodesController.save_text(
+        json.loads(request.get_data().decode("utf-8")),
+        session
+    )
+    #json.loads-y miangamic class-i mej stanal
     return jsonify(response), status_code
 
 @app.route('/get_saved_texts')
@@ -148,7 +169,8 @@ def get_saved_texts() -> str:
     """
     Get saved text data.
 
-    Returns:
+    Returns
+    ------------------------
         str: JSON response containing saved text data.
     """
     response, status_code = NodesController.get_saved_texts(session)
@@ -159,13 +181,17 @@ def delete_text(node_id: str) -> str:
     """
     Delete text data.
 
-    Parameters:
+    Parameters
+    ------------------------
         node_id (str): The ID of the text node to delete.
 
-    Returns:
-        str: JSON response indicating success or failure.
+    Returns
+    ------------------------
+        str:
+        JSON response indicating success or failure.
     """
     response, status_code = data_controller.delete_text(node_id)
+    #asec status_code-y hanel,menak responsoe-ov stanal
     return jsonify(response), status_code
 
 @app.route('/profile/edit_text/<node_id>', methods=['POST'])  
@@ -173,10 +199,12 @@ def edit_text(node_id: str) -> str:
     """
     Edit text data.
 
-    Parameters:
+    Parameters
+    ------------------------
         node_id (str): The ID of the text node to edit.
 
-    Returns:
+    Returns
+    ------------------------
         str: JSON response indicating success or failure.
     """
     try:
@@ -184,3 +212,4 @@ def edit_text(node_id: str) -> str:
         return jsonify(response), status_code
     except Exception as e:
         return jsonify({'message': str(e)}), 500
+#esteghi try_excepty hanel,vorovhetev function-i mej ardenisk ka try/except

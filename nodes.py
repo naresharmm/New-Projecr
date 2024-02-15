@@ -2,6 +2,9 @@ import json
 import uuid
 from datetime import datetime
 
+#avelacnel type annotationner
+#avelacnel docstring-er
+#sarqel aranc static class-i
 
 class NodesController:
     @staticmethod
