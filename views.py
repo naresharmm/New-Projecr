@@ -11,6 +11,7 @@ from flask import (
     session
 )
 
+
 from nodes import NodesController
 from countries import get_countries
 from data_storage import DataController
@@ -77,7 +78,7 @@ def profile() -> str:
         ).get('node_ids', []) if node_id in json.load(
             open('data/node.json', 'r', encoding='utf-8')
         )}
-        #ughel ays kody qanzi vat e,pahel pythoni 80 line-y
+        #ughel ays kody qanzi vat e
     else:
         nodes = {}
 
@@ -129,7 +130,9 @@ def login() -> str:
 
     Returns
     ------------------------
-        str: Either redirects to the profile page upon successful login or displays an error message.
+        str:
+        Either redirects to the profile page
+        or sdisplays an error message.
     """
     if user_controller.login(request.form.get('phone_number'), request.form.get('password')):
         return redirect(url_for('profile'))
@@ -157,11 +160,11 @@ def save_text() -> str:
     ------------------------
         str: JSON response indicating success or failure.
     """
-    response, status_code = NodesController.save_text(
-        json.loads(request.get_data().decode("utf-8")),
-        session
+    request_data = request.get_json()
+    response, status_code = NodesController().save_text(
+        text_data=request_data,
+        session=session
     )
-    #json.loads-y miangamic class-i mej stanal
     return jsonify(response), status_code
 
 @app.route('/get_saved_texts')
@@ -191,7 +194,6 @@ def delete_text(node_id: str) -> str:
         JSON response indicating success or failure.
     """
     response, status_code = data_controller.delete_text(node_id)
-    #asec status_code-y hanel,menak responsoe-ov stanal
     return jsonify(response), status_code
 
 @app.route('/profile/edit_text/<node_id>', methods=['POST'])  
@@ -201,15 +203,13 @@ def edit_text(node_id: str) -> str:
 
     Parameters
     ------------------------
-        node_id (str): The ID of the text node to edit.
+        node_id (str): 
+        The ID of the text node to edit.
 
     Returns
     ------------------------
-        str: JSON response indicating success or failure.
+        str: 
+        JSON response indicating success or failure.
     """
-    try:
-        response, status_code = data_controller.edit_text(node_id, request)
-        return jsonify(response), status_code
-    except Exception as e:
-        return jsonify({'message': str(e)}), 500
-#esteghi try_excepty hanel,vorovhetev function-i mej ardenisk ka try/except
+    response, status_code = data_controller.edit_text(node_id, request)
+    return jsonify(response), status_code

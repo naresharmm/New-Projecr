@@ -1,7 +1,8 @@
 import json
-#type anotationner dnel
+from typing import Dict, Any, Union
+
 class DataController:
-    def __init__(self, session, request):
+    def __init__(self, session: Dict[str, Any], request) -> None:
         """
         Initialize the DataController.
 
@@ -15,7 +16,7 @@ class DataController:
         self.session = session
         self.request = request
 
-    def delete_text(self, node_id):
+    def delete_text(self, node_id: str) -> Dict[str, Union[str, int]]:
         """
         Delete a text node.
 
@@ -62,7 +63,7 @@ class DataController:
         except Exception as e:
             return {'message': str(e)}, 500
 
-    def edit_text(self, node_id, request):
+    def edit_text(self, node_id: str, request) -> Dict[str, Union[str, int]]:
         """
         Edit a text node.
 

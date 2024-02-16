@@ -1,4 +1,3 @@
-# user.py
 import re
 
 from cryptography.fernet import Fernet
@@ -11,12 +10,16 @@ class UserValidator:
 
         Parameters:
         ------------------------
-            request_form (dict): A dictionary containing user registration data. Expected keys are
-            'username', 'phone_number', 'password', 'password2', 'email', and 'country'.
+            request_form (dict): 
+            A dictionary containing user registration data. Expected keys are
+            'username', 'phone_number',
+            'password', 'password2', 'email', and 'country'.
 
         Returns
         ------------------------
-            bool: True if all provided data is valid according to the validation criteria, False otherwise.
+            bool:
+              True if all provided data
+            is valid according to the validation criteria
         """
         username = request_form.get('username')
         phone_number = request_form.get("phone_number")
@@ -35,11 +38,13 @@ class UserValidator:
 
         Parameters
         ------------------------
-            phone_number (str): The phone number to be validated.
+            phone_number (str): 
+            The phone number to be validated.
 
         Returns
         ------------------------
-            bool: True if the phone number matches the format (+374xxxxxxxx)
+            bool: 
+            True if the phone number matches the format (+374xxxxxxxx)
         """
         return re.match(r'^\+374\d{8}$', phone_number)
 
@@ -57,16 +62,21 @@ class UserValidator:
         return re.match(r'^[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}$', email)
 
     def is_valid_password(self, password: str, password2: str) -> bool:
-        """Validate a password based on specific criteria and check if it matches the confirmed password.
+        """Validate a password based on 
+        specific criteria and 
+        check if  matches the  password.
 
         Parameters
         ------------------------
-            password (str): The password to be validated.
-            password2 (str): The confirmation password to be compared with the first password.
+            password (str): 
+            The password to be validated.
+            password2 (str):
+            The confirmation password to be compared with the first password.
 
         Returns
         ------------------------
-            bool: True if the password meets the required format
+            bool:
+              True if the password meets the required format
               and matches the confirmation password, False otherwise.
         """
         return self.has_valid_format(password) and password == password2
