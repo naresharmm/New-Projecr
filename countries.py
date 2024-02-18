@@ -1,5 +1,3 @@
-'''Country.py
-'''
 import os
 import json
 

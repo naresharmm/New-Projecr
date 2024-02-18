@@ -67,22 +67,18 @@ def profile() -> str:
         str: 
         Rendered HTML content for the user profile page.
     """
-    user_phone = session.get("phone_number")
-    if user_phone:
-        with open('data/users.json', 'r', encoding='utf-8') as users_file:
-            users = json.load(users_file)
-        nodes = {node_id: json.load(
-            open('data/node.json', 'r', encoding='utf-8')
-        ).get(node_id) for node_id in users.get(
-            user_phone, {}
-        ).get('node_ids', []) if node_id in json.load(
-            open('data/node.json', 'r', encoding='utf-8')
-        )}
-        #ughel ays kody qanzi vat e
-    else:
+    if session.get("phone_number"):
         nodes = {}
+        with open('data/users.json',encoding="utf-8") as users_file:
+            for node_id in json.load(users_file).\
+            get(session.get("phone_number"), {}).get('node_ids', []):
 
-    return render_template('profile.html', nodes=nodes)
+                with open('data/node.json',encoding="utf-8") as node_file:
+                    node_data = json.load(node_file)
+
+                    if node_id in node_data:
+                        nodes[node_id] = node_data[node_id]
+        return render_template('profile.html', nodes=nodes)
 
 
 @app.route('/register', methods=['GET'])
@@ -95,7 +91,8 @@ def register_form() -> str:
         str
         Rendered HTML content for the registration form.
     """
-    return render_template('registration.html', countries=get_countries())
+    return render_template('registration.html', \
+    countries=get_countries())
 
 @app.route('/register', methods=['POST'])
 def register() -> str:
@@ -134,7 +131,8 @@ def login() -> str:
         Either redirects to the profile page
         or sdisplays an error message.
     """
-    if user_controller.login(request.form.get('phone_number'), request.form.get('password')):
+    if user_controller.login(request.form.get('phone_number'),\
+     request.form.get('password')):
         return redirect(url_for('profile'))
     else:
         return "Phone number or password is incorrect"
@@ -196,7 +194,7 @@ def delete_text(node_id: str) -> str:
     response, status_code = data_controller.delete_text(node_id)
     return jsonify(response), status_code
 
-@app.route('/profile/edit_text/<node_id>', methods=['POST'])  
+@app.route('/profile/edit_text/<node_id>', methods=['POST'])
 def edit_text(node_id: str) -> str:
     """
     Edit text data.
