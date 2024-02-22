@@ -88,17 +88,23 @@ class UserController:
         dict
             A dictionary containing user profile data.
         """
-        if session.get("phone_number"):
+        phone_number = session.get("phone_number")
+        if phone_number:
             nodes = {}
             with open('data/users.json', encoding="utf-8") as users_file:
-                for node_id in json.load(users_file).get(session.get("phone_number"), {}).get('node_ids', []):
+                user_data = json.load(users_file).get(phone_number, {})
+                node_ids = user_data.get('node_ids', [])
 
-                    with open('data/node.json', encoding="utf-8") as node_file:
-                        node_data = json.load(node_file)
+                with open('data/node.json', encoding="utf-8") as node_file:
+                    node_data = json.load(node_file)
 
-                        if node_id in node_data:
-                            nodes[node_id] = node_data[node_id]
+                for node_id in node_ids:
+                    if node_id in node_data:
+                        nodes[node_id] = node_data[node_id]
+
             return nodes
+        else:
+            return {}
     def logout(self) -> bool:
         """
         Logout the current user.
