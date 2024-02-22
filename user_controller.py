@@ -79,7 +79,26 @@ class UserController:
             return True
         else:
             return False
+    def get_profile(self) -> dict:
+        """
+        Retrieve user profile data.
 
+        Returns
+        -------
+        dict
+            A dictionary containing user profile data.
+        """
+        if session.get("phone_number"):
+            nodes = {}
+            with open('data/users.json', encoding="utf-8") as users_file:
+                for node_id in json.load(users_file).get(session.get("phone_number"), {}).get('node_ids', []):
+
+                    with open('data/node.json', encoding="utf-8") as node_file:
+                        node_data = json.load(node_file)
+
+                        if node_id in node_data:
+                            nodes[node_id] = node_data[node_id]
+            return nodes
     def logout(self) -> bool:
         """
         Logout the current user.

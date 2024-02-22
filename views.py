@@ -67,18 +67,8 @@ def profile() -> str:
         str: 
         Rendered HTML content for the user profile page.
     """
-    if session.get("phone_number"):
-        nodes = {}
-        with open('data/users.json',encoding="utf-8") as users_file:
-            for node_id in json.load(users_file).\
-            get(session.get("phone_number"), {}).get('node_ids', []):
-
-                with open('data/node.json',encoding="utf-8") as node_file:
-                    node_data = json.load(node_file)
-
-                    if node_id in node_data:
-                        nodes[node_id] = node_data[node_id]
-        return render_template('profile.html', nodes=nodes)
+    nodes = user_controller.get_profile()
+    return render_template('profile.html', nodes=nodes)
 
 
 @app.route('/register', methods=['GET'])
