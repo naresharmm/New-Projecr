@@ -1,118 +1,80 @@
-import json
+
+import sqlite3
 from cryptography.fernet import Fernet
 
-from flask import session,request
-
 from user import UserValidator
-from data_storage import DataController
-
 class UserController:
-    def __init__(self, session: dict, request: request) -> None:
-        """
-        Initialize the UserController.
-
-        Parameters
-        ----------
-        session : dict
-            The session object from Flask.
-        request : request
-            The request object from Flask.
-        """
-        self.data_controller = DataController(session, request)
+    def __init__(self, session: dict, request) -> None:
+        self.session = session
+        self.request = request
         self.cipher_suite = Fernet(b'DHML65d-nY3iZL1vsWkrmzf2kSfoHQ9Fnv6IWlyIPzQ=')
 
     def register(self, form_data: dict) -> bool:
-        """
-        Register a new user.
-
-        Parameters
-        ----------
-        form_data : dict
-            The form data containing user information.
-
-        Returns
-        -------
-        bool
-            True if registration is successful, False otherwise.
-        """
         password_form = form_data.get("password")
         encrypted_password = self.cipher_suite.encrypt(password_form.encode()).decode()
-        if UserValidator.validate_registration(form_data):
-            with open('data/users.json', 'r+', encoding='utf-8') as file:
-                users = json.load(file)
-                file.seek(0)
-                file.truncate()
-                user_phone = form_data.get("phone_number")
-                session["phone_number"] = user_phone
-                users[user_phone] = {
-                    "email": form_data.get('email'),
-                    "password": encrypted_password,
-                    "node_ids": []
-                }
-                json.dump(users, file, indent=2)
-            return True
+        if UserValidator().validate_registration(form_data):
+            try:
+                conn = sqlite3.connect('app.db')
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO users (phone_number, email, password, node_ids)
+                    VALUES (?, ?, ?, ?)
+                ''', (form_data['phone_number'], form_data['email'], encrypted_password, ''))
+
+                conn.commit()
+                conn.close()
+
+                self.session["phone_number"] = form_data["phone_number"]
+                return True
+
+            except Exception as e:
+                print(str(e))
+                return False
         else:
             return False
 
     def login(self, phone_number: str, password: str) -> bool:
-        """
-        Login a user.
+        try:
+            conn = sqlite3.connect('app.db')
+            cursor = conn.cursor()
 
-        Parameters
-        ----------
-        phone_number : str
-            The phone number of the user.
-        password : str
-            The password of the user.
+            
+            cursor.execute('SELECT password FROM users WHERE phone_number = ?', (phone_number,))
+            user_data = cursor.fetchone()
+            conn.close()
 
-        Returns
-        -------
-        bool
-            True if login is successful, False otherwise.
-        """
-        with open('data/users.json', 'r', encoding='utf-8') as file:
-            users = json.load(file)
+            if user_data:
+                dec_password = self.cipher_suite.decrypt(user_data[0].encode()).decode()
+                if dec_password == password:
+                    self.session["phone_number"] = phone_number
+                    return True
 
-        dec_password = self.cipher_suite.decrypt(users[phone_number]["password"]).decode()
-        if phone_number in users and dec_password == password:
-            session["phone_number"] = phone_number
-            return True
-        else:
-            return False
+        except Exception as e:
+            print(str(e))
+
+        return False
     def get_profile(self) -> dict:
-        """
-        Retrieve user profile data.
-
-        Returns
-        -------
-        dict
-            A dictionary containing user profile data.
-        """
-        phone_number = session.get("phone_number")
+        phone_number = self.session.get("phone_number")
         if phone_number:
             nodes = {}
-            with open('data/users.json', encoding="utf-8") as users_file:
-                user_data = json.load(users_file).get(phone_number, {})
-                node_ids = user_data.get('node_ids', [])
+            try:
+                conn = sqlite3.connect('app.db')
+                cursor = conn.cursor()
 
-                with open('data/node.json', encoding="utf-8") as node_file:
-                    node_data = json.load(node_file)
-
-                for node_id in node_ids:
-                    if node_id in node_data:
-                        nodes[node_id] = node_data[node_id]
-
+                
+                cursor.execute('SELECT node_ids FROM users WHERE phone_number = ?', (phone_number,))
+                user_data = cursor.fetchone()
+                if user_data:
+                    node_ids = user_data[0].split(',')
+                    
+                    
+                    for node_id in node_ids:
+                        cursor.execute('SELECT * FROM nodes WHERE node_id = ?', (node_id,))
+                        node_data = cursor.fetchone()
+                        if node_data:
+                            nodes[node_id] = {'text': node_data[1]} 
+                    
+                conn.close()
+            except Exception as e:
+                print(str(e))
             return nodes
-        else:
-            return {}
-    def logout(self) -> bool:
-        """
-        Logout the current user.
-
-        Returns
-        -------
-        bool
-            True if logout is successful.
-        """
-        session.clear()
-        return True
