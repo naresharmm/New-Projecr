@@ -1,6 +1,7 @@
 
 import sqlite3
 from cryptography.fernet import Fernet
+from flask import session 
 
 from user import UserValidator
 class UserController:
@@ -8,7 +9,17 @@ class UserController:
         self.session = session
         self.request = request
         self.cipher_suite = Fernet(b'DHML65d-nY3iZL1vsWkrmzf2kSfoHQ9Fnv6IWlyIPzQ=')
-
+        
+    def logout(self) -> bool:
+        """
+        Logout the current user.
+        Returns
+        -------
+        bool
+            True if logout is successful.
+        """
+        session.clear()
+        return True
     def register(self, form_data: dict) -> bool:
         password_form = form_data.get("password")
         encrypted_password = self.cipher_suite.encrypt(password_form.encode()).decode()
@@ -61,20 +72,16 @@ class UserController:
                 conn = sqlite3.connect('app.db')
                 cursor = conn.cursor()
 
-                
-                cursor.execute('SELECT node_ids FROM users WHERE phone_number = ?', (phone_number,))
-                user_data = cursor.fetchone()
-                if user_data:
-                    node_ids = user_data[0].split(',')
-                    
-                    
-                    for node_id in node_ids:
-                        cursor.execute('SELECT * FROM nodes WHERE node_id = ?', (node_id,))
-                        node_data = cursor.fetchone()
-                        if node_data:
-                            nodes[node_id] = {'text': node_data[1]} 
-                    
+                cursor.execute('''
+                    SELECT node_id, text, title FROM nodes WHERE user_id = (SELECT id FROM users WHERE phone_number = ?)
+                ''', (phone_number,))
+                user_texts = cursor.fetchall()
+
                 conn.close()
+
+                for row in user_texts:
+                    nodes[row[0]] = {'title': row[2], 'text': row[1]}
+
             except Exception as e:
                 print(str(e))
             return nodes
