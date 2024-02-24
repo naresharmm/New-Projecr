@@ -2,7 +2,6 @@ import re
 
 from cryptography.fernet import Fernet
 
-import re
 
 class UserValidator:
     def validate_registration(self, request_form: dict) -> bool:
@@ -10,16 +9,11 @@ class UserValidator:
 
         Parameters:
         ------------------------
-            request_form (dict): 
-            A dictionary containing user registration data. Expected keys are
-            'username', 'phone_number',
-            'password', 'password2', 'email', and 'country'.
-
+        request_form (dict): 
+        
         Returns
         ------------------------
             bool:
-              True if all provided data
-            is valid according to the validation criteria
         """
         username = request_form.get('username')
         phone_number = request_form.get("phone_number")
@@ -57,7 +51,7 @@ class UserValidator:
 
         Returns
         ------------------------
-            bool: True if the email address is in a valid format, False otherwise.
+            bool: 
         """
         return re.match(r'^[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}$', email)
 
@@ -70,14 +64,10 @@ class UserValidator:
         ------------------------
             password (str): 
             The password to be validated.
-            password2 (str):
-            The confirmation password to be compared with the first password.
 
         Returns
         ------------------------
             bool:
-              True if the password meets the required format
-              and matches the confirmation password, False otherwise.
         """
         return self.has_valid_format(password) and password == password2
 
@@ -86,13 +76,11 @@ class UserValidator:
 
         Parameters
         ------------------------
-            password (str): The password to be checked for format.
+            password (str): 
 
         Returns
         ------------------------
-            bool: True if the password contains 
-            at least one lowercase letter, one uppercase letter,
-            and one digit, and is at least 8 characters long
+            bool:
         """
         return re.match(
             r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$",

@@ -10,7 +10,6 @@ def create_tables():
             phone_number TEXT UNIQUE NOT NULL,
             email TEXT NOT NULL,
             password TEXT NOT NULL
-            
         )
     ''')
 

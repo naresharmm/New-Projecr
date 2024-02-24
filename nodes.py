@@ -1,10 +1,8 @@
-import json
 import uuid
-from datetime import datetime
-from typing import Dict, Union
 import sqlite3
+
 class NodesController:
-    def save_text(self, text_data: Dict[str, Union[str, None]], session: Dict[str, Union[str, None]]):
+    def save_text(self, text_data: dict, session: dict):
         """
         Save a text node.
 
@@ -44,4 +42,3 @@ class NodesController:
 
         except Exception as e:
             return {'message': str(e)}, 500
-

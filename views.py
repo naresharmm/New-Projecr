@@ -1,4 +1,4 @@
-import json
+
 from functools import wraps
 
 from flask import (
@@ -199,5 +199,5 @@ def edit_text(node_id: str) -> str:
         str: 
         JSON response indicating success or failure.
     """
-    response, status_code = data_controller.edit_text(node_id, request)
+    response, status_code = data_controller.edit_text(node_id)
     return jsonify(response), status_code
