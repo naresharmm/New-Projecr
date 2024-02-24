@@ -8,12 +8,14 @@ class NodesController:
         """
         Save a text node.
 
-        Parameters:
-            text_data (dict): A dictionary containing the text and title to be saved.
-            session (dict): A dictionary containing session information, including the user's phone number.
+        Parameters
+        ---------------
+            text_data (dict):
+            session (dict): 
 
-        Returns:
-            tuple: A tuple containing a dictionary message about the status of the save operation and an HTTP status code.
+        Returns
+        -----------------
+            tuple:
         """
         text = text_data.get("text")
         title = text_data.get("title")

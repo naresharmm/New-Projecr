@@ -73,7 +73,9 @@ class UserController:
                 cursor = conn.cursor()
 
                 cursor.execute('''
-                    SELECT node_id, text, title FROM nodes WHERE user_id = (SELECT id FROM users WHERE phone_number = ?)
+                SELECT node_id, text, 
+                title FROM nodes
+                WHERE user_id = (SELECT id FROM users WHERE phone_number = ?)
                 ''', (phone_number,))
                 user_texts = cursor.fetchall()
 
