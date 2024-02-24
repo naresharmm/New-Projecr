@@ -30,12 +30,6 @@ class DataController:
 
             cursor.execute('DELETE FROM nodes WHERE node_id = ?', (node_id,))
             
-            cursor.execute('''
-                UPDATE users
-                SET node_ids = REPLACE(node_ids, ?, '')
-                WHERE phone_number = ?
-            ''', (node_id + ',', user_phone))
-            
             conn.commit()
             conn.close()
 
