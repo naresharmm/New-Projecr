@@ -9,7 +9,7 @@ def create_tables():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             phone_number TEXT UNIQUE NOT NULL,
             email TEXT NOT NULL,
-            password TEXT NOT NULL,
+            password TEXT NOT NULL
             
         )
     ''')
