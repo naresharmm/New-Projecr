@@ -15,10 +15,8 @@ class NodesController:
         -----------------
             tuple:
         """
-        text = text_data.get("text")
-        title = text_data.get("title")
 
-        if not text or not title:
+        if not text_data.get("text") or not text_data.get("title"):
             return {'message': 'Text or title missing'}, 400
 
         
@@ -33,7 +31,7 @@ class NodesController:
             cursor.execute('''
                 INSERT INTO nodes (node_id, text, title, user_id)
                 VALUES (?, ?, ?, (SELECT id FROM users WHERE phone_number = ?))
-            ''', (node_id, text, title, user_phone))
+            ''', (node_id, text_data.get("text"), text_data.get("title"), user_phone))
             
             conn.commit()
             conn.close()

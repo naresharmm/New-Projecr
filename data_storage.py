@@ -5,6 +5,20 @@ class DataController:
     DataController class for managing text data.
     """
     def __init__(self, session: dict, request):
+        """
+        Initialize the object.
+
+        Parameters
+        ----------
+        session : dict
+            A dictionary representing the session.
+        request : YourRequestType
+            An object representing the request.
+
+        Returns
+        -------
+        None
+        """
         self.session = session
         self.request = request
 
