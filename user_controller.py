@@ -5,28 +5,44 @@ from user import UserValidator
 
 class UserController:
     def __init__(self) -> None:
-        self.cipher_suite = Fernet(b'DHML65d-nY3iZL1vsWkrmzf2kSfoHQ9Fnv6IWlyIPzQ=')
+        """
+        Initializes the UserController with a Fernet cipher suite.
+        """
+        self.cipher_suite = \
+        Fernet(b'DHML65d-nY3iZL1vsWkrmzf2kSfoHQ9Fnv6IWlyIPzQ=')
 
     def register(self, form_data: dict, session: dict) -> bool:
+        """
+        Registers a new user.
+
+        Parameters:
+        ------------------------
+        form_data (dict): 
+    
+        session (dict): 
+
+        Returns:
+        ------------------------
+        bool:
+            =
+        """
         password_form = form_data.get("password")
-        encrypted_password = self.cipher_suite.encrypt(password_form.encode()).decode()
+        encrypted_password = self.cipher_suite.\
+        encrypt(password_form.encode()).decode()
         if UserValidator().validate_registration(form_data):
             try:
                 conn = sqlite3.connect('app.db')
                 cursor = conn.cursor()
                 cursor.execute('''
-                    INSERT INTO users (phone_number, email, password, node_ids)
-                    VALUES (?, ?, ?, ?)
+                    INSERT INTO users (phone_number, email, password)
+                    VALUES (?, ?, ?)
                 ''',
-                (form_data['phone_number'], form_data['email'], encrypted_password, ''))
+                (form_data['phone_number'],\
+                 form_data['email'], encrypted_password))
                 conn.commit()
 
-                cursor.execute('SELECT id FROM users WHERE phone_number = ?', (form_data['phone_number'],))
-                user_id = cursor.fetchone()[0]
-
+                session["user_id"] = cursor.lastrowid 
                 conn.close()
-
-                session["user_id"] = user_id
                 return True
 
             except Exception as e:
@@ -34,19 +50,36 @@ class UserController:
                 return False
         else:
             return False
-
+        
     def login(self, phone_number: str, password: str, session: dict) -> bool:
+        """
+        Logs a user into the system.
+
+        Parameters:
+        ------------------------
+        phone_number (str): 
+            
+        password (str): 
+        session (dict): 
+            
+
+        Returns:
+        ------------------------
+        bool:
+        """
         try:
             conn = sqlite3.connect('app.db')
             cursor = conn.cursor()
 
-            cursor.execute('SELECT id, password FROM users WHERE phone_number = ?', (phone_number,))
+            cursor.execute('SELECT id, password FROM users\
+            WHERE phone_number = ?', (phone_number,))
             user_data = cursor.fetchone()
             conn.close()
 
             if user_data:
                 user_id, hashed_password = user_data
-                dec_password = self.cipher_suite.decrypt(hashed_password.encode()).decode()
+                dec_password = self.cipher_suite.\
+                decrypt(hashed_password.encode()).decode()
                 if dec_password == password:
                     session["user_id"] = user_id
                     return True
@@ -57,6 +90,17 @@ class UserController:
         return False
 
     def get_profile(self, session: dict) -> dict:
+        """
+        Retrieves the profile data of the authenticated user.
+
+        Parameters:
+        ------------------------
+        session (dict): 
+
+        Returns:
+        ------------------------
+        dict:
+        """
         user_id = session.get("user_id")
         if user_id:
             nodes = {}

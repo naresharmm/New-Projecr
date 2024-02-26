@@ -45,7 +45,8 @@ def login_form() -> str:
 
 @app.route('/login', methods=['POST'])
 def login() -> str:
-    if user_controller.login(request.form.get('phone_number'), request.form.get('password'), session):
+    if user_controller.login(request.form.get('phone_number'),\
+        request.form.get('password'), session):
         return redirect(url_for('profile'))
     else:
         return "Phone number or password is incorrect"
@@ -59,7 +60,8 @@ def logout() -> str:
 def save_text() -> str:
     data_controller = DataController(session, request)
     request_data = request.get_json()
-    response, status_code = NodesController().save_text(text_data=request_data, session=session)
+    response, status_code = NodesController().\
+    save_text(text_data=request_data, session=session)
     return jsonify(response), status_code
 
 @app.route('/get_saved_texts')
