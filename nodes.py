@@ -19,8 +19,8 @@ class NodesController:
         if not text_data.get("text") or not text_data.get("title"):
             return {'message': 'Text or title missing'}, 400
 
-        
-        if not (user_phone := session.get("phone_number")):
+        user_id = session.get("user_id")
+        if not user_id:
             return {'message': 'User not authenticated'}, 401
         
         try:
@@ -30,8 +30,9 @@ class NodesController:
             node_id = str(uuid.uuid4())
             cursor.execute('''
                 INSERT INTO nodes (node_id, text, title, user_id)
-                VALUES (?, ?, ?, (SELECT id FROM users WHERE phone_number = ?))
-            ''', (node_id, text_data.get("text"), text_data.get("title"), user_phone))
+                VALUES (?, ?, ?, ?)
+            ''', 
+            (node_id, text_data.get("text"), text_data.get("title"), user_id))
             
             conn.commit()
             conn.close()

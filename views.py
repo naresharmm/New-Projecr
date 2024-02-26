@@ -8,7 +8,6 @@ from flask import (
     session
 )
 
-
 from nodes import NodesController
 from countries import get_countries
 from data_storage import DataController
@@ -16,9 +15,6 @@ from user_controller import UserController
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
-
-data_controller = DataController(session, request)
-user_controller = UserController(session, request)
 
 @app.route('/')
 def home() -> str:
@@ -41,6 +37,7 @@ def profile() -> str:
         str: 
         Rendered HTML content for the user profile page.
     """
+    user_controller = UserController(session, request)
     nodes = user_controller.get_profile()
     return render_template('profile.html', nodes=nodes)
 
@@ -52,7 +49,7 @@ def register_form() -> str:
 
     Returns
     ------------------------
-        str
+        str: 
         Rendered HTML content for the registration form.
     """
     return render_template('registration.html', \
@@ -67,6 +64,7 @@ def register() -> str:
     ------------------------
         str: 
     """
+    user_controller = UserController(session, request)
     if user_controller.register(request.form):
         return redirect(url_for('profile'))
     else:
@@ -94,6 +92,7 @@ def login() -> str:
         Either redirects to the profile page
         or sdisplays an error message.
     """
+    user_controller = UserController(session, request)
     if user_controller.login(request.form.get('phone_number'),\
      request.form.get('password')):
         return redirect(url_for('profile'))
@@ -109,6 +108,7 @@ def logout() -> str:
     ------------------------
         str: Redirects to the home page after logging out.
     """
+    user_controller = UserController(session, request)
     user_controller.logout()
     return redirect(url_for('home'))
 
@@ -121,6 +121,7 @@ def save_text() -> str:
     ------------------------
         str: JSON response indicating success or failure.
     """
+    data_controller = DataController(session, request)
     request_data = request.get_json()
     response, status_code = NodesController().save_text(
         text_data=request_data,
@@ -137,6 +138,7 @@ def get_saved_texts() -> str:
     ------------------------
         str: JSON response containing saved text data.
     """
+    data_controller = DataController(session, request)
     response, status_code = NodesController.get_saved_texts(session)
     return jsonify(response), status_code
 
@@ -154,6 +156,7 @@ def delete_text(node_id: str) -> str:
         str:
         
     """
+    data_controller = DataController(session, request)
     response, status_code = data_controller.delete_text(node_id)
     return jsonify(response), status_code
 
@@ -172,5 +175,6 @@ def edit_text(node_id: str) -> str:
         str: 
        
     """
+    data_controller = DataController(session, request)
     response, status_code = data_controller.edit_text(node_id)
     return jsonify(response), status_code

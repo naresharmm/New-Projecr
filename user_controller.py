@@ -1,4 +1,3 @@
-
 import sqlite3
 from cryptography.fernet import Fernet
 
@@ -27,7 +26,7 @@ class UserController:
 
     def register(self, form_data: dict) -> bool:
         password_form = form_data.get("password")
-        encrypted_password =\
+        encrypted_password = \
         self.cipher_suite.encrypt(password_form.encode()).decode()
         if UserValidator().validate_registration(form_data):
             try:
@@ -36,14 +35,19 @@ class UserController:
                 cursor.execute('''
                     INSERT INTO users (phone_number, email, password, node_ids)
                     VALUES (?, ?, ?, ?)
-                ''',\
+                ''',
                 (form_data['phone_number'],\
                  form_data['email'], encrypted_password, ''))
 
                 conn.commit()
+
+                cursor.execute('SELECT id FROM users WHERE\
+                phone_number = ?', (form_data['phone_number'],))
+                user_id = cursor.fetchone()[0]
+
                 conn.close()
 
-                self.session["phone_number"] = form_data["phone_number"]
+                self.session["user_id"] = user_id 
                 return True
 
             except Exception as e:
@@ -52,22 +56,23 @@ class UserController:
         else:
             return False
 
+
     def login(self, phone_number: str, password: str) -> bool:
         try:
             conn = sqlite3.connect('app.db')
             cursor = conn.cursor()
 
-            
-            cursor.execute\
-            ('SELECT password FROM users WHERE phone_number = ?', \
-             (phone_number,))
+            cursor.execute('SELECT id, \
+            password FROM users WHERE phone_number = ?', (phone_number,))
             user_data = cursor.fetchone()
             conn.close()
 
             if user_data:
-                dec_password = self.cipher_suite.decrypt(user_data[0].encode()).decode()
+                user_id, hashed_password = user_data
+                dec_password =\
+                self.cipher_suite.decrypt(hashed_password.encode()).decode()
                 if dec_password == password:
-                    self.session["phone_number"] = phone_number
+                    self.session["user_id"] = user_id
                     return True
 
         except Exception as e:
@@ -76,18 +81,17 @@ class UserController:
         return False
 
     def get_profile(self) -> dict:
-        phone_number = self.session.get("phone_number")
-        if phone_number:
+        user_id = self.session.get("user_id")
+        if user_id:
             nodes = {}
             try:
                 conn = sqlite3.connect('app.db')
                 cursor = conn.cursor()
 
                 cursor.execute('''
-                SELECT node_id, text, 
-                title FROM nodes
-                WHERE user_id = (SELECT id FROM users WHERE phone_number = ?)
-                ''', (phone_number,))
+                    SELECT node_id, text, title FROM nodes
+                    WHERE user_id = ?
+                ''', (user_id,))
                 user_texts = cursor.fetchall()
 
                 conn.close()
@@ -98,3 +102,5 @@ class UserController:
             except Exception as e:
                 print(str(e))
             return nodes
+        else:
+            return {'message': 'User not authenticated'}, 401

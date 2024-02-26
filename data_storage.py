@@ -34,15 +34,16 @@ class DataController:
         -------
         dict
         """
-        user_phone = self.session.get("phone_number")
-        if not user_phone:
+        user_id = self.session.get("user_id")
+        if not user_id:
             return {'message': 'User not authenticated'}, 401
         
         try:
             conn = sqlite3.connect('app.db')
             cursor = conn.cursor()
 
-            cursor.execute('DELETE FROM nodes WHERE node_id = ?', (node_id,))
+            cursor.execute('DELETE FROM nodes WHERE\
+            node_id = ? AND user_id = ?', (node_id, user_id))
             
             conn.commit()
             conn.close()
@@ -59,7 +60,7 @@ class DataController:
         Parameters
         ----------
         node_id : str
-        The ID of the node whose text needs to be edited.
+            The ID of the node whose text needs to be edited.
 
         Returns
         -------
@@ -71,17 +72,21 @@ class DataController:
         if not new_text:
             return {'message': 'New text not provided'}, 400
 
-        user_phone = self.session.get("phone_number")
-        if not user_phone:
+        user_id = self.session.get("user_id")
+        if not user_id:
             return {'message': 'User not authenticated'}, 401
 
         try:
             conn = sqlite3.connect('app.db')
             cursor = conn.cursor()
 
-            cursor.execute('SELECT * FROM nodes WHERE node_id = ?', (node_id,))
+            cursor.execute('SELECT * FROM nodes WHERE\
+            node_id = ? AND user_id = ?', (node_id, user_id))
             if not cursor.fetchone():
                 return {'message': 'Text node not found'}, 404
+
+            cursor.execute('UPDATE nodes SET text = ?\
+            WHERE node_id = ? AND user_id = ?', (new_text, node_id, user_id))
 
             conn.commit()
             conn.close()
