@@ -1,6 +1,3 @@
-
-from functools import wraps
-
 from flask import (
     Flask,
     render_template,
@@ -23,28 +20,6 @@ app.secret_key = 'your_secret_key_here'
 data_controller = DataController(session, request)
 user_controller = UserController(session, request)
 
-
-def login_required(view):
-    """
-    Decorator to ensure that a user is logged in before accessing a view.
-
-    Redirects to the home page if the user is not logged in.
-
-    Parameters
-    ------------------------
-        view (function): The view function to be decorated.
-
-    Returns
-    ------------------------
-        function: The wrapped view function.
-    """
-    @wraps(view)
-    def wrapped_view(**kwargs):
-        if not session.get("phone_number", None):
-            return redirect(url_for('home'))
-        return view(**kwargs)
-    return wrapped_view
-
 @app.route('/')
 def home() -> str:
     """
@@ -57,7 +32,6 @@ def home() -> str:
     return render_template('home.html', countries=countries)
 
 @app.route('/profile')
-@login_required
 def profile() -> str:
     """
     Render the user profile page.
@@ -91,8 +65,7 @@ def register() -> str:
 
     Returns
     ------------------------
-        str: Either redirects to the profile page 
-        upon successful registration or displays an error message.
+        str: 
     """
     if user_controller.register(request.form):
         return redirect(url_for('profile'))
@@ -174,12 +147,12 @@ def delete_text(node_id: str) -> str:
 
     Parameters
     ------------------------
-        node_id (str): The ID of the text node to delete.
+        node_id (str): 
 
     Returns
     ------------------------
         str:
-        JSON response indicating success or failure.
+        
     """
     response, status_code = data_controller.delete_text(node_id)
     return jsonify(response), status_code
@@ -197,7 +170,7 @@ def edit_text(node_id: str) -> str:
     Returns
     ------------------------
         str: 
-        JSON response indicating success or failure.
+       
     """
     response, status_code = data_controller.edit_text(node_id)
     return jsonify(response), status_code
