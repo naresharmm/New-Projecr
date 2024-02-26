@@ -64,12 +64,6 @@ def save_text() -> str:
     save_text(text_data=request_data, session=session)
     return jsonify(response), status_code
 
-@app.route('/get_saved_texts')
-def get_saved_texts() -> str:
-    data_controller = DataController(session, request)
-    response, status_code = NodesController.get_saved_texts(session)
-    return jsonify(response), status_code
-
 @app.route('/profile/delete_text/<node_id>', methods=['GET', 'POST'])
 def delete_text(node_id: str) -> str:
     data_controller = DataController(session, request)
