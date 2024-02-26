@@ -1,4 +1,4 @@
-import sqlite3
+from create_db import conn
 
 class DataController:
     """
@@ -39,16 +39,13 @@ class DataController:
             return {'message': 'User not authenticated'}, 401
         
         try:
-            conn = sqlite3.connect('app.db')
-            cursor = conn.cursor()
+            with conn:
+                cursor = conn.cursor()
 
-            cursor.execute('DELETE FROM nodes WHERE\
-            node_id = ? AND user_id = ?', (node_id, user_id))
-            
-            conn.commit()
-            conn.close()
-
-            return {'message': 'Text deleted successfully'}, 200
+                cursor.execute('DELETE FROM nodes WHERE\
+                node_id = ? AND user_id = ?', (node_id, user_id))
+                
+                return {'message': 'Text deleted successfully'}, 200
 
         except Exception as e:
             return {'message': str(e)}, 500
@@ -77,21 +74,19 @@ class DataController:
             return {'message': 'User not authenticated'}, 401
 
         try:
-            conn = sqlite3.connect('app.db')
-            cursor = conn.cursor()
+            with conn:
+                cursor = conn.cursor()
 
-            cursor.execute('SELECT * FROM nodes WHERE\
-            node_id = ? AND user_id = ?', (node_id, user_id))
-            if not cursor.fetchone():
-                return {'message': 'Text node not found'}, 404
+                cursor.execute('SELECT * FROM nodes WHERE\
+                node_id = ? AND user_id = ?', (node_id, user_id))
+                if not cursor.fetchone():
+                    return {'message': 'Text node not found'}, 404
 
-            cursor.execute('UPDATE nodes SET text = ?\
-            WHERE node_id = ? AND user_id = ?', (new_text, node_id, user_id))
+                cursor.execute('UPDATE nodes SET text = ?\
+                WHERE node_id = ? AND user_id = ?',\
+                 (new_text, node_id, user_id))
 
-            conn.commit()
-            conn.close()
-
-            return {'message': 'Text edited successfully'}, 200
+                return {'message': 'Text edited successfully'}, 200
 
         except Exception as e:
             return {'message': str(e)}, 500

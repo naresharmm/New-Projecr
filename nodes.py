@@ -1,5 +1,8 @@
+# nodes.py
 import uuid
 import sqlite3
+
+from create_db import conn
 
 class NodesController:
     def save_text(self, text_data: dict, session: dict):
@@ -15,7 +18,6 @@ class NodesController:
         -----------------
             tuple:
         """
-
         if not text_data.get("text") or not text_data.get("title"):
             return {'message': 'Text or title missing'}, 400
 
@@ -23,22 +25,27 @@ class NodesController:
         if not user_id:
             return {'message': 'User not authenticated'}, 401
         
+        cursor = None
         try:
-            conn = sqlite3.connect('app.db')
             cursor = conn.cursor()
 
             node_id = str(uuid.uuid4())
-            cursor.execute('''
+            query = '''
                 INSERT INTO nodes (node_id, text, title, user_id)
                 VALUES (?, ?, ?, ?)
-            ''', 
-            (node_id, text_data.get("text"), text_data.get("title"), user_id))
+            '''
+            cursor.execute(query, (node_id,
+             text_data.get("text"), text_data.get("title"), user_id))
             
             conn.commit()
-            conn.close()
 
+            print("Text saved successfully")
             return {'message': 
             'Text saved successfully', 'node_id': node_id}, 200
 
         except Exception as e:
             return {'message': str(e)}, 500
+        
+        finally:
+            if cursor:
+                cursor.close()
