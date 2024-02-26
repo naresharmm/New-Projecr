@@ -14,9 +14,11 @@ class FormHandler {
     }
     submitForm() {
         const textareaValue = 
-        document.querySelector('#' + this.formId + ' textarea').value.trim();
+        document.querySelector
+        ('#' + this.formId + ' textarea').value.trim();
         const titleValue = 
-        document.querySelector('#' + this.formId + ' input[name="title"]').value.trim();
+        document.querySelector
+        ('#' + this.formId + ' input[name="title"]').value.trim();
         if (!textareaValue || !titleValue) {
             alert('Please enter both title and text.');
             return;
@@ -68,7 +70,8 @@ function deleteNode(node_id) {
     })
     .then(data => {
         if (data.message === 'Text deleted successfully') {
-            const rowToDelete = document.querySelector(`tr[data-node-id="${node_id}"]`);
+            const rowToDelete =
+             document.querySelector(`tr[data-node-id="${node_id}"]`);
             console.log(node_id)
             if (rowToDelete) {
                 console.log(rowToDelete)
@@ -107,7 +110,9 @@ function editNode(node_id) {
     })
     .then(data => {
         if (data.message === 'Text edited successfully') {
-            const textElement = document.querySelector(`tr[data-node-id="${node_id}"] td:nth-child(2)`);
+            const textElement =
+             document.querySelector
+             (`tr[data-node-id="${node_id}"] td:nth-child(2)`);
             if (textElement) {
                 textElement.textContent = newText;
                 alert(data.message);
@@ -124,5 +129,7 @@ function editNode(node_id) {
     });
 
 }
-let formHandler1 = new FormHandler('myModal', () => alert('Text added!'), '');
-let formHandler2 = new FormHandler('myModal2', () => alert('Text edited or deleted!'), '');
+let formHandler1 = new FormHandler('myModal',
+ () => alert('Text added!'), '');
+let formHandler2 = new FormHandler('myModal2', 
+() => alert('Text edited or deleted!'), '');

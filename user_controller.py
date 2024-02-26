@@ -1,14 +1,18 @@
 
 import sqlite3
 from cryptography.fernet import Fernet
+
 from flask import session 
 
 from user import UserValidator
+
+
 class UserController:
     def __init__(self, session: dict, request) -> None:
         self.session = session
         self.request = request
-        self.cipher_suite = Fernet(b'DHML65d-nY3iZL1vsWkrmzf2kSfoHQ9Fnv6IWlyIPzQ=')
+        self.cipher_suite =\
+        Fernet(b'DHML65d-nY3iZL1vsWkrmzf2kSfoHQ9Fnv6IWlyIPzQ=')
         
     def logout(self) -> bool:
         """
@@ -20,9 +24,11 @@ class UserController:
         """
         session.clear()
         return True
+
     def register(self, form_data: dict) -> bool:
         password_form = form_data.get("password")
-        encrypted_password = self.cipher_suite.encrypt(password_form.encode()).decode()
+        encrypted_password =\
+        self.cipher_suite.encrypt(password_form.encode()).decode()
         if UserValidator().validate_registration(form_data):
             try:
                 conn = sqlite3.connect('app.db')
@@ -30,7 +36,9 @@ class UserController:
                 cursor.execute('''
                     INSERT INTO users (phone_number, email, password, node_ids)
                     VALUES (?, ?, ?, ?)
-                ''', (form_data['phone_number'], form_data['email'], encrypted_password, ''))
+                ''',\
+                (form_data['phone_number'],\
+                 form_data['email'], encrypted_password, ''))
 
                 conn.commit()
                 conn.close()
@@ -50,7 +58,9 @@ class UserController:
             cursor = conn.cursor()
 
             
-            cursor.execute('SELECT password FROM users WHERE phone_number = ?', (phone_number,))
+            cursor.execute\
+            ('SELECT password FROM users WHERE phone_number = ?', \
+             (phone_number,))
             user_data = cursor.fetchone()
             conn.close()
 
@@ -64,6 +74,7 @@ class UserController:
             print(str(e))
 
         return False
+
     def get_profile(self) -> dict:
         phone_number = self.session.get("phone_number")
         if phone_number:

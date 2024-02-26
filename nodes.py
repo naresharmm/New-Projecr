@@ -21,8 +21,8 @@ class NodesController:
         if not text or not title:
             return {'message': 'Text or title missing'}, 400
 
-        user_phone = session.get("phone_number")
-        if not user_phone:
+        
+        if not (user_phone := session.get("phone_number")):
             return {'message': 'User not authenticated'}, 401
         
         try:
@@ -38,7 +38,8 @@ class NodesController:
             conn.commit()
             conn.close()
 
-            return {'message': 'Text saved successfully', 'node_id': node_id}, 200
+            return {'message': 
+            'Text saved successfully', 'node_id': node_id}, 200
 
         except Exception as e:
             return {'message': str(e)}, 500

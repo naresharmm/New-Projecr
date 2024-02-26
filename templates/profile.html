@@ -75,8 +75,10 @@
                 <tr data-node-id="{{ node_id }}">
                     <td>{{ node_data.title }}</td>
                     <td>{{ node_data.text }}</td>
-                    <td><button onclick="editNode('{{ node_id }}')"><i class="fas fa-pencil-alt"></i></button></td>
-                    <td><button onclick="deleteNode('{{ node_id }}')"><i class="fas fa-times"></i></button></td>
+                    <td><button onclick="editNode('{{ node_id }}')">
+                        <i class="fas fa-pencil-alt"></i></button></td>
+                    <td><button onclick="deleteNode('{{ node_id }}')">
+                        <i class="fas fa-times"></i></button></td>
                 </tr>
                 {% endfor %}
             </tbody>

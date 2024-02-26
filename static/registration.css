@@ -19,7 +19,8 @@ h2 {
     margin-bottom: 20px; 
 }
 
-.regBtn, .button1, .button2, .container a[type="button"], .container button[type="button"] {
+.regBtn, .button1, .button2, .container a[type="button"], 
+.container button[type="button"] {
     border: none;
     border-radius: 20px; 
     cursor: pointer;
@@ -34,7 +35,8 @@ h2 {
     background-color: #2ebf91; 
 }
 
-.regBtn:hover, .button1:hover, .button2:hover, .container a[type="button"]:hover, .container button[type="button"]:hover {
+.regBtn:hover, .button1:hover, .button2:hover,
+ .container a[type="button"]:hover, .container button[type="button"]:hover {
     background-color: #555; 
     color: white;
 }
@@ -62,7 +64,9 @@ h2 {
 }
 
 
-.container input[type="text"], .container input[type="password"], .container select, .container input[type="email"], .container input[type="tel"] {
+.container input[type="text"], 
+.container input[type="password"], .container select, 
+.container input[type="email"], .container input[type="tel"] {
     padding: 15px;
     margin-bottom: 20px; 
     border-radius: 20px; 

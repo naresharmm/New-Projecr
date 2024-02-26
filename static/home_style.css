@@ -10,7 +10,8 @@ h1 {
     color: #333;
 }
 
-.regBtn, .button1, .button2, .container a[type="button"], .container button[type="button"] {
+.regBtn, .button1, .button2, .container a[type="button"],
+ .container button[type="button"] {
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -39,7 +40,8 @@ h1 {
     background-color: #333;
 }
 
-.button2:hover, .container a[type="button"]:hover, .container button[type="button"]:hover {
+.button2:hover, .container a[type="button"]:hover,
+ .container button[type="button"]:hover {
     background-color: #555;
     color: white;
 }
@@ -65,7 +67,8 @@ h1 {
     font-weight: bold;
 }
 
-.container input[type="text"], .container input[type="password"], .container select {
+.container input[type="text"], .container input[type="password"],
+ .container select {
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 6px;

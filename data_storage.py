@@ -38,7 +38,7 @@ class DataController:
         except Exception as e:
             return {'message': str(e)}, 500
 
-    def edit_text(self, node_id) -> dict:
+    def edit_text(self, node_id: int) -> dict:
         """
         Edit text associated with a node.
 
@@ -46,7 +46,6 @@ class DataController:
         ----------
         node_id : str
         The ID of the node whose text needs to be edited.
-        request : <type of request>
 
         Returns
         -------

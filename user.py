@@ -1,7 +1,5 @@
 import re
 
-from cryptography.fernet import Fernet
-
 
 class UserValidator:
     def validate_registration(self, request_form: dict) -> bool:
@@ -53,7 +51,8 @@ class UserValidator:
         ------------------------
             bool: 
         """
-        return re.match(r'^[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}$', email)
+        return re.match\
+        (r'^[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}$', email)
 
     def is_valid_password(self, password: str, password2: str) -> bool:
         """Validate a password based on 
