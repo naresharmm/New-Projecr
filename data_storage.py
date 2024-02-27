@@ -11,14 +11,12 @@ class DataController:
         Parameters
         ----------
         node_id : str
-            The ID of the node to delete.
         session : dict
-            A dictionary representing the session.
 
         Returns
         -------
         dict
-            A dictionary containing the result of the operation.
+
         """
         user_id = session.get("user_id")
         if not user_id:
@@ -28,7 +26,8 @@ class DataController:
             cursor = conn.cursor()
             cursor.execute(
                 'DELETE FROM nodes WHERE node_id = ? AND user_id = ?',
-                (node_id, user_id)
+                (node_id,
+                 user_id)
             )
             if cursor.rowcount == 0:
                 return {'message': 'Text node not found'}, 404
@@ -42,16 +41,16 @@ class DataController:
         Parameters
         ----------
         node_id : str
-            The ID of the node whose text needs to be edited.
+        
         new_text : str
-            The new text to be set for the node.
+            
         session : dict
-            A dictionary representing the session.
+          
 
         Returns
         -------
         dict
-            A dictionary containing the result of the operation.
+           
         """
         if not new_text:
             return {'message': 'New text not provided'}, 400

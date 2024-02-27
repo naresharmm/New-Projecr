@@ -1,5 +1,7 @@
 from cryptography.fernet import Fernet
 
+import hashlib
+
 from create_db import conn
 
 from user import UserValidator
@@ -11,6 +13,29 @@ class UserController:
         """
         self.cipher_suite =\
          Fernet(b'DHML65d-nY3iZL1vsWkrmzf2kSfoHQ9Fnv6IWlyIPzQ=')
+    def generate_slug(self, user_id: int, phone_number: str) -> str:
+        """
+        Generate a unique slug for the user based on user_id and phone_number.
+
+        Parameters:
+        ------------------------
+        user_id : int 
+        phone_number : str 
+
+        Returns:
+        ------------------------
+        str
+        """
+        # Concatenate user_id and phone_number
+        combined_data = str(user_id) + phone_number
+
+        # Generate hash using hashlib
+        hashed_data = hashlib.sha256(combined_data.encode()).hexdigest()
+
+        # Return the first 10 characters of the hashed data as slug
+        return hashed_data[:10]
+    
+
 
     def register(self, form_data: dict, session: dict) -> bool:
         """
@@ -33,15 +58,17 @@ class UserController:
         
         with conn:
             cursor = conn.cursor()
+            slug = self.generate_slug(cursor.lastrowid, form_data['phone_number'])  # Generate slug
             cursor.execute(
                 '''
-                INSERT INTO users (phone_number, email, password)
-                VALUES (?, ?, ?)
+                INSERT INTO users (phone_number, email, password, slug)
+                VALUES (?, ?, ?, ?)
                 ''',\
                 (\
                 form_data['phone_number'],
                 form_data['email'],
-                encrypted_password)
+                encrypted_password,
+                slug)  # Insert slug into database
             )
             session["user_id"] = cursor.lastrowid
             return True
@@ -64,7 +91,10 @@ class UserController:
             cursor = conn.cursor()
             cursor.execute(\
             'SELECT id, password FROM users WHERE phone_number = ?',\
-            (phone_number,))
+            (
+            phone_number,
+              )
+            )
             user_data = cursor.fetchone()
 
         if user_data:
@@ -107,3 +137,4 @@ class UserController:
             return nodes
         else:
             return {'message': 'User not authenticated'}, 401
+    
