@@ -23,7 +23,7 @@ def create_tables():
             FOREIGN KEY (user_id) REFERENCES users (id)
         )
     ''')
-
     conn.commit()
+
 if __name__ == "__main__":
     create_tables()

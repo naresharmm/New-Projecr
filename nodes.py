@@ -1,6 +1,4 @@
-# nodes.py
 import uuid
-import sqlite3
 
 from create_db import conn
 
@@ -11,8 +9,8 @@ class NodesController:
 
         Parameters
         ---------------
-            text_data (dict):
-            session (dict): 
+            text_data : dict
+            session : dict
 
         Returns
         -----------------
@@ -26,6 +24,7 @@ class NodesController:
             return {'message': 'User not authenticated'}, 401
         
         cursor = None
+        
         try:
             cursor = conn.cursor()
 
@@ -40,8 +39,10 @@ class NodesController:
             conn.commit()
 
             print("Text saved successfully")
-            return {'message': 
-            'Text saved successfully', 'node_id': node_id}, 200
+            return {
+                'message': 'Text saved successfully',
+                'node_id': node_id
+            }, 200
 
         except Exception as e:
             return {'message': str(e)}, 500
