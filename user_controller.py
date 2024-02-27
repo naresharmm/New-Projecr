@@ -72,9 +72,8 @@ class UserController:
         try:
             with conn:
                 cursor = conn.cursor()
-                cursor.execute(
-                'SELECT id, password FROM users WHERE phone_number = ?',
-                (phone_number,))
+                cursor.execute('SELECT id, password FROM users\
+                     WHERE phone_number = ?', (phone_number,))
                 user_data = cursor.fetchone()
 
             if user_data:
@@ -109,14 +108,11 @@ class UserController:
                     cursor = conn.cursor()
                     cursor.execute('''
                         SELECT node_id, text, title FROM nodes
-                        WHERE user_id = ?
-                    ''',
-                    (user_id,))
+                         WHERE user_id = ?
+                    ''', (user_id,))
                     user_texts = cursor.fetchall()
-
                 for row in user_texts:
                     nodes[row[0]] = {'title': row[2], 'text': row[1]}
-                    
             except Exception as e:
                 print(str(e))
             return nodes

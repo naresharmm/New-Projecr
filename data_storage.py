@@ -24,20 +24,16 @@ class DataController:
         if not user_id:
             return {'message': 'User not authenticated'}, 401
         
-        try:
-            with conn:
-                cursor = conn.cursor()
-
-                cursor.execute(
-                    'DELETE FROM nodes WHERE node_id = ? AND user_id = ?',
-                    (node_id, user_id)
-                )
-                
+        with conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'DELETE FROM nodes WHERE node_id = ? AND user_id = ?',
+                (node_id, user_id)
+            )
+            if cursor.rowcount == 0:
+                return {'message': 'Text node not found'}, 404
+            else:
                 return {'message': 'Text deleted successfully'}, 200
-
-        except Exception as e:
-            return {'message': str(e)}, 500
-
 
     def edit_text(self, node_id: str, new_text: str, session: dict) -> dict:
         """
@@ -64,27 +60,20 @@ class DataController:
         if not user_id:
             return {'message': 'User not authenticated'}, 401
 
-        try:
-            with conn:
-                cursor = conn.cursor()
+        with conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'SELECT * FROM nodes WHERE node_id = ? AND user_id = ?',
+                (node_id, user_id)
+            )
+            if not cursor.fetchone():
+                return {'message': 'Text node not found'}, 404
 
-                cursor.execute(
-                    'SELECT * FROM nodes WHERE node_id = ? AND user_id = ?',
-                    (node_id,
-                     user_id)
-                )
-
-                if not cursor.fetchone():
-                    return {'message': 'Text node not found'}, 404
-
-                cursor.execute(
+            cursor.execute(
                 'UPDATE nodes SET text = ? WHERE node_id = ? AND user_id = ?',
-                    (new_text,
-                     node_id,
-                     user_id)
-                )
-
+                (new_text, node_id, user_id)
+            )
+            if cursor.rowcount == 0:
+                return {'message': 'Text node not found'}, 404
+            else:
                 return {'message': 'Text edited successfully'}, 200
-
-        except Exception as e:
-            return {'message': str(e)}, 500
