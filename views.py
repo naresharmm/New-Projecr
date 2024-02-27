@@ -16,6 +16,7 @@ from user_controller import UserController
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
+user_controller = UserController()
 
 @app.route('/')
 def home() -> str:
@@ -24,7 +25,7 @@ def home() -> str:
 
 @app.route('/profile')
 def profile() -> str:
-    nodes = UserController().get_profile(session)
+    nodes = user_controller.get_profile(session)
     return render_template('profile.html', nodes=nodes)
 
 @app.route('/register', methods=['GET'])
@@ -33,7 +34,8 @@ def register_form() -> str:
 
 @app.route('/register', methods=['POST'])
 def register() -> str:
-    if UserController().register(request.form, session):
+    user_controller = UserController()
+    if user_controller.register(request.form, session):
         return redirect(url_for('profile'))
     else:
         return "Data inputted wrong"
@@ -44,7 +46,8 @@ def login_form() -> str:
 
 @app.route('/login', methods=['POST'])
 def login() -> str:
-    if UserController().login(request.form.get('phone_number'),\
+    user_controller = UserController()
+    if user_controller.login(request.form.get('phone_number'),\
         request.form.get('password'), session):
         return redirect(url_for('profile'))
     else:
@@ -57,21 +60,24 @@ def logout() -> str:
 
 @app.route('/save_text', methods=['POST'])
 def save_text() -> str:
+    data_controller = DataController(session, request)
     request_data = request.get_json()
-    response, status_code = NodesController().save_text(
-        text_data=request_data,
-        session=session
-    )
+    response, status_code = NodesController().\
+    save_text(text_data=request_data, session=session)
     return jsonify(response), status_code
 
 @app.route('/profile/delete_text/<node_id>', methods=['GET', 'POST'])
 def delete_text(node_id: str) -> str:
-    data_controller = DataController(session, request)
-    response, status_code = data_controller.delete_text(node_id)
+    data_controller = DataController()
+    response, status_code = data_controller.delete_text(node_id, session)
     return jsonify(response), status_code
 
 @app.route('/profile/edit_text/<node_id>', methods=['POST'])
 def edit_text(node_id: str) -> str:
-    data_controller = DataController(session, request)
-    response, status_code = data_controller.edit_text(node_id)
+    data_controller = DataController()
+    response, status_code = data_controller.edit_text\
+    (
+        node_id,
+        request.json.get('new_text'),
+        session)
     return jsonify(response), status_code
