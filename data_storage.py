@@ -57,12 +57,6 @@ class DataController:
 
         with conn:
             cursor = conn.cursor()
-            cursor.execute(
-                'SELECT * FROM nodes WHERE node_id = ? AND user_id = ?',
-                (node_id, user_id)
-            )
-            if not cursor.fetchone():
-                return {'message': 'Text node not found'}, 404
 
             cursor.execute(
                 'UPDATE nodes SET text = ? WHERE node_id = ? AND user_id = ?',
