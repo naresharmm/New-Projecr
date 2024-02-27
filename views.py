@@ -60,24 +60,25 @@ def logout() -> str:
 
 @app.route('/save_text', methods=['POST'])
 def save_text() -> str:
-    data_controller = DataController()
     request_data = request.get_json()
-    response, status_code = NodesController().save_text(\
+    response = NodesController().save_text(\
         text_data=request_data,
         session=session)
-    return jsonify(response), status_code
+    return jsonify(response)
 
 @app.route('/profile/delete_text/<node_id>', methods=['GET', 'POST'])
 def delete_text(node_id: str) -> str:
     data_controller = DataController() 
-    response, status_code = data_controller.delete_text(node_id, session)
-    return jsonify(response), status_code
+    response = data_controller.delete_text(node_id, session)
+    return jsonify(response)
+
 
 @app.route('/profile/edit_text/<node_id>', methods=['POST'])
 def edit_text(node_id: str) -> str:
     data_controller = DataController() 
-    response, status_code = data_controller.edit_text(\
+    response = data_controller.edit_text(
         node_id,
         request.json.get('new_text'),
-        session)
-    return jsonify(response), status_code
+        session
+    )
+    return jsonify(response)

@@ -18,19 +18,19 @@ class DataController:
         dict
 
         """
-        if not (user_id := session.get("user_id")):
-            return {'message': 'User not authenticated'}, 401
+        if not  session.get("user_id"):
+            return {'message': 'User not authenticated'}
         
         with conn:
             cursor = conn.cursor()
             cursor.execute(
-                'DELETE FROM nodes WHERE node_id = ? AND user_id = ?',
-                (node_id, user_id)
+                'DELETE FROM nodes WHERE node_id = ?',
+                (node_id,)
             )
             if cursor.rowcount == 0:
-                return {'message': 'Text node not found'}, 404
+                return {'message': 'Text node not found'}
             else:
-                return {'message': 'Text deleted successfully'}, 200
+                return {'message': 'Text deleted successfully'}
 
     def edit_text(self, node_id: str, new_text: str, session: dict) -> dict:
         """
@@ -49,20 +49,19 @@ class DataController:
            
         """
         if not new_text:
-            return {'message': 'New text not provided'}, 400
+            return {'message': 'New text not provided'}
 
-        user_id = session.get("user_id")
-        if not user_id:
-            return {'message': 'User not authenticated'}, 401
+        if not session.get("user_id"):
+            return {'message': 'User not authenticated'}
 
         with conn:
             cursor = conn.cursor()
 
             cursor.execute(
-                'UPDATE nodes SET text = ? WHERE node_id = ? AND user_id = ?',
-                (new_text, node_id, user_id)
+                'UPDATE nodes SET text = ? WHERE node_id = ?',
+                (new_text, node_id,)
             )
             if cursor.rowcount == 0:
-                return {'message': 'Text node not found'}, 404
+                return {'message': 'Text node not found'}
             else:
-                return {'message': 'Text edited successfully'}, 200
+                return {'message': 'Text edited successfully'}

@@ -26,10 +26,7 @@ class UserController:
         ------------------------
         str
         """
-        # Concatenate user_id and phone_number
         combined_data = str(user_id) + phone_number
-
-        # Generate hash using hashlib
         hashed_data = hashlib.sha256(combined_data.encode()).hexdigest()
 
         # Return the last 10 characters of the hashed data as slug
@@ -73,7 +70,7 @@ class UserController:
                     form_data['email'],
                     encrypted_password,
                     slug
-                )  # Insert slug into database
+                ) 
             )
             session["user_id"] = cursor.lastrowid
             return True
@@ -139,5 +136,4 @@ class UserController:
                 nodes[row[0]] = {'title': row[2], 'text': row[1]}
             return nodes
         else:
-            return {'message': 'User not authenticated'}, 401
-    
+            return {'message': 'User not authenticated'}

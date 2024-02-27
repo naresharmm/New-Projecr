@@ -1,5 +1,5 @@
 from views import app
-#WORKING FILE
+
 import create_db
 create_db.create_tables()
 

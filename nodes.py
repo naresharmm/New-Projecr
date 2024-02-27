@@ -17,12 +17,13 @@ class NodesController:
         dict
         """
         if not text_data.get("text") or not text_data.get("title"):
-            return {'message': 'Text or title missing'}, 400
+            return {'message': 'Text or title missing'}
 
         if not (user_id := session.get("user_id")):
-            return {'message': 'User not authenticated'}, 401
+            return {'message': 'User not authenticated'}
         
-        cursor = conn.cursor()
+        with conn:
+            cursor = conn.cursor()
 
         try:
             node_id = str(uuid.uuid4())
