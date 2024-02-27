@@ -1,5 +1,4 @@
 import uuid
-
 from create_db import conn
 
 class NodesController:
@@ -23,21 +22,19 @@ class NodesController:
         if not user_id:
             return {'message': 'User not authenticated'}, 401
         
-        cursor = None
-        
-        try:
-            cursor = conn.cursor()
+        cursor = conn.cursor()
 
+        try:
             node_id = str(uuid.uuid4())
             query = '''
                 INSERT INTO nodes (node_id, text, title, user_id)
                 VALUES (?, ?, ?, ?)
             '''
             cursor.execute(query, (\
-            node_id,
-            text_data.get("text"),
-            text_data.get("title"), user_id))
-            
+                node_id,
+                text_data.get("text"),
+                text_data.get("title"),
+                user_id))
             conn.commit()
 
             print("Text saved successfully")
@@ -46,9 +43,5 @@ class NodesController:
                 'node_id': node_id
             }, 200
 
-        except Exception as e:
-            return {'message': str(e)}, 500
-        
         finally:
-            if cursor:
-                cursor.close()
+            cursor.close()
