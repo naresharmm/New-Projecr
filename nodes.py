@@ -33,8 +33,10 @@ class NodesController:
                 INSERT INTO nodes (node_id, text, title, user_id)
                 VALUES (?, ?, ?, ?)
             '''
-            cursor.execute(query, (node_id,
-             text_data.get("text"), text_data.get("title"), user_id))
+            cursor.execute(query, (\
+            node_id,
+            text_data.get("text"),
+            text_data.get("title"), user_id))
             
             conn.commit()
 
