@@ -18,16 +18,14 @@ class DataController:
         dict
 
         """
-        user_id = session.get("user_id")
-        if not user_id:
+        if not (user_id := session.get("user_id")):
             return {'message': 'User not authenticated'}, 401
         
         with conn:
             cursor = conn.cursor()
             cursor.execute(
                 'DELETE FROM nodes WHERE node_id = ? AND user_id = ?',
-                (node_id,
-                 user_id)
+                (node_id, user_id)
             )
             if cursor.rowcount == 0:
                 return {'message': 'Text node not found'}, 404
@@ -41,9 +39,7 @@ class DataController:
         Parameters
         ----------
         node_id : str
-        
         new_text : str
-            
         session : dict
           
 

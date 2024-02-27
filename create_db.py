@@ -1,20 +1,21 @@
 import sqlite3
-conn = sqlite3.connect('app.db',check_same_thread=False)
+
+conn = sqlite3.connect('app.db', check_same_thread=False)
 
 def create_tables():
     cursor = conn.cursor()
-
-    # Drop the existing users table if it exists
-    cursor.execute('''DROP TABLE IF EXISTS users''')
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        phone_number TEXT UNIQUE NOT NULL,
-        email TEXT NOT NULL,
-        password TEXT NOT NULL,
-        slug TEXT NOT NULL
+    
+    cursor.execute(
+        '''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            phone_number TEXT UNIQUE NOT NULL,
+            email TEXT NOT NULL,
+            password TEXT NOT NULL,
+            slug TEXT NOT NULL
+        )
+        '''
     )
-''')
 
     conn.commit()
     cursor.execute('''
