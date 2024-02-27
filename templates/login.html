@@ -6,6 +6,18 @@
 </html>
 <div id="loginForm" style="margin-top:40px;" class="container hidden">
     <h1>Login</h1>
+    {% if error_message %}
+    <div class="error-message" style="
+        color: #ff0000; 
+        background-color: #ffe5e5; 
+        border: 1px solid #ff0000;
+        padding: 10px; 
+        margin-bottom: 20px; 
+        margin-top:8px;
+        border-radius: 5px;
+        font-size: 16px;
+    ">{{ error_message }}</div>
+    {% endif %}
     <form method="POST" action="/login" id="loginFormId">
         <label for="phone_number">Phone number:</label>
         <input type="text" id="phone_number" name="phone_number"

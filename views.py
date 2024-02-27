@@ -31,13 +31,15 @@ def profile() -> str:
 def register_form() -> str:
     return render_template('registration.html', countries=get_countries())
 
-@app.route('/register', methods=['POST'])
-def register() -> str:
-    user_controller = UserController() 
-    if user_controller.register(request.form, session):
-        return redirect(url_for('profile'))
-    else:
-        return "Data inputted wrong"
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        user_controller = UserController() 
+        if user_controller.register(request.form, session):
+            return redirect(url_for('profile'))
+        else:
+            error_message = "Passwords don't match. Please try again."
+            return render_template('registration.html', error_message=error_message)
 
 @app.route('/login', methods=['GET'])
 def login_form() -> str:
@@ -51,7 +53,11 @@ def login() -> str:
         request.form.get('password'), session):
         return redirect(url_for('profile'))
     else:
-        return "Phone number or password is incorrect"
+        error_message =\
+        "The phone number or password is incorrect.\
+         Please double-check your credentials"
+        return render_template('login.html', error_message=error_message)
+
 
 @app.route('/logout', methods=['GET'])
 def logout() -> str:

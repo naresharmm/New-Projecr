@@ -46,7 +46,7 @@ class NodesController:
             return {
                 'message': 'Text saved successfully',
                 'node_id': node_id
-            }, 200
+            }
 
         finally:
             cursor.close()

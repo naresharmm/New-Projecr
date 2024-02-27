@@ -15,7 +15,8 @@ class UserController:
 
     def generate_slug(self, user_id: int, phone_number: str) -> str:
         """
-        Generate a unique slug for the user based on user_id and phone_number.
+        Generate a unique slug for the user
+        based on user_id and phone_number.
 
         Parameters:
         ------------------------

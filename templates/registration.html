@@ -1,53 +1,40 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" 
-        href="{{ url_for('static', filename='registration.css') }}">
-    </head>
-    <body>
-         <div id="registrationForm" class="container hidden">
-        <h2>Register your account here! </h2>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='registration.css') }}">
+    <style>
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="registrationForm" class="container hidden">
+        <h2>Register your account here!</h2>
+        {% if error_message %}
+        <div class="error-message">{{ error_message }}</div>
+        {% endif %}
         <form method="POST" action="/register" id="yourFormId">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br><br>
             <label for="email">Email:</label>
-            <input type="email" 
-            pattern="[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}" 
-            title="Email should be up to 10 characters @ up to 10 characters. 
-            up to 10 characters"
-             name="email" id="email" required>
-    
-    
+            <input type="email" pattern="[a-zA-Z0-9._%+-]{1,10}@[a-zA-Z0-9.-]{1,10}\.[a-zA-Z]{1,10}" title="Email should be up to 10 characters @ up to 10 characters. up to 10 characters" name="email" id="email" required>
             <label for="phone_number">Phone number:</label>
-            <input type="tel" id="phone_number"
-             name="phone_number" pattern="^\+374\d{8}$" 
-            title="Phone number should be in the format: +374XXXXXXXX"
-            required class="phonenumber"><br><br>
-    
+            <input type="tel" id="phone_number" name="phone_number" pattern="^\+374\d{8}$" title="Phone number should be in the format: +374XXXXXXXX" required class="phonenumber"><br><br>
             <label for="country">Country:</label>
             <select name="country" id="country" class="country">
                 {% for country in countries %}
                     <option value="{{ country }}">{{ country }}</option>
                 {% endfor %}
             </select><br><br>
-    
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" 
-            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" 
-            title="Your password must contain at
-             least 8 characters, including at least one uppercase letter, 
-             one lowercase letter, and one number."
-             required><br><br>
-    
+            <input type="password" id="password" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" title="Your password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, and one number." required><br><br>
             <label for="password2">Repeat password:</label>
-            <input type="password" id="password2" name="password2" 
-            required><br><br>
-    
+            <input type="password" id="password2" name="password2" required><br><br>
             <button class="regBtn" id="button2" type="submit">Register</button>
         </form>
-  
-        
     </div>
-    </body>
+</body>
 </html>
-       
